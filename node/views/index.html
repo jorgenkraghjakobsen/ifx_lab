@@ -11,17 +11,28 @@
         return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
         }
         var manuals = JSON.parse(htmlDecode("<%= JSON.stringify(manuals) %>"));
+        console.log(htmlDecode("<%= JSON.stringify(instruments) %>"))
+        var instruments = JSON.parse(htmlDecode("<%= JSON.stringify(instruments) %>"));
     </script>
-</head>
+</head> 
 <body>
     <h1>Welcome to a static site! Heres a list of manuals in manuals folder:</h1>
     <p id="manualsField"></p>
+    <p id="instrumentsField"></p>
     <script>
         var p = document.getElementById("manualsField")
-        console.log(manuals)
+        //onsole.log(manuals)
         manuals.forEach(manual => {
             p.innerHTML += manual + "<br>";
         });
+        var p = document.getElementById("instrumentsField")
+        instruments.forEach(instrument => {
+            p.innerHTML += instrument + "<br>";
+
+        });
+
+
+        
         //p.innerHTML
     </script>
 </body>
