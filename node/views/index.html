@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
     <script> 
+        
+        
         function htmlDecode(input){
         var e = document.createElement('div');
         e.innerHTML = input;
@@ -19,6 +21,7 @@
     <h1>Welcome to a static site! Heres a list of manuals in manuals folder:</h1>
     <p id="manualsField"></p>
     <p id="instrumentsField"></p>
+    <table id="instrumentsTable" style="width:100%"></table> 
     <script>
         var p = document.getElementById("manualsField")
         //onsole.log(manuals)
@@ -31,6 +34,27 @@
 
         });
 
+        var table = document.getElementById('instrumentsTable');
+        let thead = table.createTHead();
+        let row = thead.insertRow();
+        console.log(instruments)
+        if(instruments[0]) for (let i = 0; i < Object.keys(instruments[0]).length; i++) {
+
+            let th = document.createElement("th");
+            rows = Object.keys(instruments[0])
+            let text = document.createTextNode(rows[i]);
+            th.appendChild(text);
+            row.appendChild(th);
+        }
+
+        for (let element of instruments) {
+            let row = table.insertRow();
+            for (key in element) {
+            let cell = row.insertCell();
+            let text = document.createTextNode(element[key]);
+            cell.appendChild(text);
+        }
+  } 
 
         
         //p.innerHTML
