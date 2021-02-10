@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
       //console.log(file)
         });
         sqlib.readTable("./data/instruments.db", "instruments", (rows) => {
-            console.log(rows)
+            //console.log(rows)
             res.render('index', { title: 'Express', manuals: manuals, instruments : rows});
         })
     });

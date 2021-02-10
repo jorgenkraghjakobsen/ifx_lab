@@ -20,24 +20,18 @@
 <body>
     <h1>Welcome to a static site! Heres a list of manuals in manuals folder:</h1>
     <p id="manualsField"></p>
-    <p id="instrumentsField"></p>
-    <table id="instrumentsTable" style="width:100%"></table> 
+    <table id="instrumentsTable" style="width:100%;"></table> 
     <script>
         var p = document.getElementById("manualsField")
         //onsole.log(manuals)
         manuals.forEach(manual => {
             p.innerHTML += manual + "<br>";
         });
-        var p = document.getElementById("instrumentsField")
-        instruments.forEach(instrument => {
-            p.innerHTML += instrument + "<br>";
-
-        });
 
         var table = document.getElementById('instrumentsTable');
         let thead = table.createTHead();
         let row = thead.insertRow();
-        console.log(instruments)
+        //console.log(instruments)
         if(instruments[0]) for (let i = 0; i < Object.keys(instruments[0]).length; i++) {
 
             let th = document.createElement("th");
@@ -49,15 +43,42 @@
 
         for (let element of instruments) {
             let row = table.insertRow();
+            row.setAttribute("onclick", `relocate("../manual/${element.model}.pdf")`)
             for (key in element) {
-            let cell = row.insertCell();
-            let text = document.createTextNode(element[key]);
-            cell.appendChild(text);
+                let cell = row.insertCell();
+                let text = document.createTextNode(element[key]);
+                cell.appendChild(text);
+            }
+        } 
+        function relocate(manual) {
+            window.location = manual;
         }
-  } 
-
         
         //p.innerHTML
     </script>
+    <style>
+#instrumentsTable {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#instrumentsTable td, #instrumentsTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#instrumentsTable tr:nth-child(even){background-color: #f2f2f2;}
+
+#instrumentsTable tr:hover {background-color: #ddd;}
+
+#instrumentsTable th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #313131;
+  color: white;
+}
+    </style>
 </body>
 </html>
