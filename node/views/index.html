@@ -43,7 +43,7 @@
 
         for (let element of instruments) {
             let row = table.insertRow();
-            row.setAttribute("onclick", `relocate("../manual/${element.model}.pdf")`)
+            if(element.manual) row.setAttribute("onclick", `relocate("../manual/${element.model}.pdf")`)
             for (key in element) {
                 let cell = row.insertCell();
                 let text = document.createTextNode(element[key]);
