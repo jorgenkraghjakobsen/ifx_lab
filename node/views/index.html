@@ -18,15 +18,15 @@
     </script>
 </head> 
 <body>
-    <h1>Welcome to a static site! Heres a list of manuals in manuals folder:</h1>
+    <h1>User manuals for instruments.</h1>
     <p id="manualsField"></p>
     <table id="instrumentsTable" style="width:100%;"></table> 
     <script>
         var p = document.getElementById("manualsField")
         //onsole.log(manuals)
-        manuals.forEach(manual => {
-            p.innerHTML += manual + "<br>";
-        });
+        //manuals.forEach(manual => {
+        //    p.innerHTML += manual + "<br>";
+        //});
 
         var table = document.getElementById('instrumentsTable');
         let thead = table.createTHead();
