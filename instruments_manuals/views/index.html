@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script> 
+        
+        
+        function htmlDecode(input){
+        var e = document.createElement('div');
+        e.innerHTML = input;
+        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+        }
+        var manuals = JSON.parse(htmlDecode("<%= JSON.stringify(manuals) %>"));
+        console.log(htmlDecode("<%= JSON.stringify(instruments) %>"))
+        var instruments = JSON.parse(htmlDecode("<%= JSON.stringify(instruments) %>"));
+    </script>
+</head> 
+<body>
+    <h1>User manuals for instruments.</h1>
+    <p id="manualsField"></p>
+    <table id="instrumentsTable" style="width:100%;"></table> 
+    <script>
+        var p = document.getElementById("manualsField")
+        //onsole.log(manuals)
+        //manuals.forEach(manual => {
+        //    p.innerHTML += manual + "<br>";
+        //});
+
+        var table = document.getElementById('instrumentsTable');
+        let thead = table.createTHead();
+        let row = thead.insertRow();
+        //console.log(instruments)
+        if(instruments[0]) for (let i = 0; i < Object.keys(instruments[0]).length; i++) {
+
+            let th = document.createElement("th");
+            rows = Object.keys(instruments[0])
+            let text = document.createTextNode(rows[i]);
+            th.appendChild(text);
+            row.appendChild(th);
+        }
+
+        for (let element of instruments) {
+            let row = table.insertRow();
+            if(element.manual) row.setAttribute("onclick", `relocate("../manual/${element.model}.pdf")`)
+            for (key in element) {
+                let cell = row.insertCell();
+                let text = document.createTextNode(element[key]);
+                cell.appendChild(text);
+            }
+        } 
+        function relocate(manual) {
+            window.location = manual;
+        }
+        
+        //p.innerHTML
+    </script>
+    <style>
+#instrumentsTable {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#instrumentsTable td, #instrumentsTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#instrumentsTable tr:nth-child(even){background-color: #f2f2f2;}
+
+#instrumentsTable tr:hover {background-color: #ddd;}
+
+#instrumentsTable th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #313131;
+  color: white;
+}
+    </style>
+</body>
+</html>
