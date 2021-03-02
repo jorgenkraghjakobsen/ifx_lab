@@ -1,16 +1,16 @@
 # ifx_lab
 
-## Collection if instruments manual (How to use)
+## Collection of manuals 
 
 * * * * * 
 
     $ git clone https://github.com/jorgenkraghjakobsen/ifx_lab.git
 
-    $ cd ifx_lab/node
+    $ cd ifx_lab/node/
 
-    $ npm i
+    $ npm install
 
     $ npm start
 
 * * * * *
-### Then you should be able to see the instruments at localhost:3000, click on a instrument and see the manual. If you wish to add another instrument, you can add it to the database in node/data/instrument.db, and the website should automaticly update when you restart the node program.
+### After running it you should be able to see the instruments at localhost:3000. To see a manual, click on a instrument. If you want to add another instrument, you should add it to the Sqlite3 database, which is located in node/data/instrument.db, and the website should automaticly update when you restart the node program.
