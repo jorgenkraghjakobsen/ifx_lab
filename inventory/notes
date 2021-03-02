@@ -1,0 +1,20 @@
+Website:
+
+Front html: 
+Button (Sends post request to server) - response (Respondes with every connected device)
+Button (Sends post request to server with array) - response (Respondes with more informatio nabout specific devices that are connected to the network.)
+Checkboxes for filters
+
+After server respons:
+Database structure over connected devices - Fx Raspberries.
+
+Front JS:
+Filters response from server, fx filter to online raspberries
+
+
+Back : 
+
+Libnmap for networking
+Express for webserver
+Bodyparser for JSON REQUESTS
+
