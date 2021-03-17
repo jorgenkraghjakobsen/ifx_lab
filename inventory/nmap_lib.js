@@ -34,6 +34,7 @@ function scanHosts(callback) {/*
     cmd = "nmap -sn 192.168.1.0/24"
     raw_result = null
     parsed_result = []
+
     exec(cmd, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
@@ -50,14 +51,23 @@ function scanHosts(callback) {/*
         raw_result.splice(0, 1)
         raw_result.splice(-1,1)
         raw_result.splice(-1,1)
+        
+        //raw_result[1].splice(-1, 1)
 
 
-        for(i in raw_result) {
-            
+        for(i in raw_result) {  
             if(raw_result[i].split("(")[0] == "Host is up ") {
                 raw_result.splice(i, 1)
             }
         }
+        for(i in raw_result) {
+            if(raw_result[i].match(/Nmap scan report for/)) {
+                raw_result[i] = raw_result[i].replace('Nmap scan report for ', "")
+            } else {
+                raw_result[i] = raw_result[i].replace(')', "")
+            }
+        }
+        console.log(raw_result)
         //console.log(raw_result)
         for(i=0;i<raw_result.length;i+=2) {
             tmp_obj = {}
@@ -65,14 +75,14 @@ function scanHosts(callback) {/*
             
             raw_result[i].substring(tmp)
 
-            tmp_obj["ip"] = raw_result[i];
+            tmp_obj["hostname/ip"] = raw_result[i];
             
             tmp_obj["host"] = raw_result[i+1].split("(")[1]//.replace(")", '')
             parsed_result.push(tmp_obj)
         }
-        console.log(parsed_result + "som")
+        //console.log(parsed_result)
+        callback(parsed_result);
     }); 
-    callback({});
 }
 
 

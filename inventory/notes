@@ -18,3 +18,10 @@ Libnmap for networking
 Express for webserver
 Bodyparser for JSON REQUESTS
 
+
+
+
+
+LOOKup mDNS           avahi
+
+https://github.com/lathiat/nss-mdns
