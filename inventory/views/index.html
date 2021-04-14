@@ -24,7 +24,7 @@
 
 
     <script>
-        function createTable(network) {
+        function createTable(network, manuals) {
             if(document.getElementById("networkInventory")) document.getElementById("networkInventory").remove();
             var div = document.getElementById("networkInventoryDIV")
             var table = document.createElement('table');
@@ -45,6 +45,8 @@
 
             for (let element of network) {
                 let row = table.insertRow();
+                
+                
                 //if(element.manual) row.setAttribute("onclick", `relocate("../manual/${element.model}.pdf")`)
                 for (key in element) {
                     let cell = row.insertCell();
@@ -66,8 +68,10 @@
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     console.log(JSON.parse(this.responseText));
-                    network = JSON.parse(this.responseText)
-                    createTable(network)
+                    network = JSON.parse(this.responseText)["inventory"]
+                    manuals = JSON.parse(this.responseText)["manuals"]
+                    createTable(network, manuals)
+                    
                 }
             };
             xhttp.open("POST", "/", true);
