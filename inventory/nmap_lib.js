@@ -5,11 +5,13 @@ var identifier = require("./detect_instrument.js")
 
 
 function scanHosts(callback) {
-    cmd = "nmap -sn 192.168.0.0/24"
+    cmd1 = "nmap -sn 192.168.0.0/24"
+	cmd2 = "nmap -sn 192.168.1.0/24"
+
     raw_result = null
     parsed_result = []
 
-    exec(cmd, (error, stdout, stderr) => {
+    exec(cmd2, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -51,28 +53,32 @@ function scanHosts(callback) {
             if(raw_result[i+1]) tmp_obj["host"] = raw_result[i+1].split("(")[1]//.replace(")", '')
             parsed_result.push(tmp_obj)
         }
-        console.log(parsed_result)
+        //console.log(parsed_result)
 
         identifyManufacturer(parsed_result, (manuals) => {
-            callback(parsed_result, manuals);
+            //console.log(manuals)
+            callback(parsed_result);
+            //callback(parsed_result);
         })
     }); 
 }
 function identifyManufacturer(devices, callback) {
     manufactures = ["Tektronix"]
     instruments = []
-    for(i in devices) {
-        for(j in manufactures) {
+    for(i of devices) {
+        for(j of manufactures) {
+            //console.log(i["host"])
             if(i.host) if(i.host.match(j)) {
                 instruments.push(i)
             }
         }
     }
-    for(i in instruments) {
-        identifier.identifyInstrumentType(i, (manual) => {
-            callback(manual)
-        })
-    }
+    callback(instruments)
+    //for(i in instruments) {
+    //    identifier.identifyInstrumentType(i, (manual) => {
+    //        callback(manual)
+    //    })
+    //}
 }
 
 

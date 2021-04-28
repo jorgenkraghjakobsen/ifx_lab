@@ -9,8 +9,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res) {
-    nmap.scanHosts((r, m) => {
-        res.end(JSON.stringify({"inventory" : r, "manuls" : m}))
+    nmap.scanHosts((r) => {
+        //console.log(r)
+        res.end(JSON.stringify({"inventory" : r}))
     })
 });
 

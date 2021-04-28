@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
     <script> 
-        
-        
+        //Dont worry about this, it's just to purify the data the server recieves.
         function htmlDecode(input){
         var e = document.createElement('div');
         e.innerHTML = input;
@@ -15,16 +14,24 @@
     </script>
 </head> 
 <body>
-    <h1>Online Hosts.</h1>
+    <h1>Online Hosts.</h1> 
+    <label for="mode">Mode: </label>
+    <select onchange="modeChanged()">
+        <option>All: Display all network information</option>
+        <option>Instruments: Only display the instruments on the network</option>
+    </select>
     <button onclick="detectNetworks()">Detect</button>
-    <div id="networkInventoryDIV"></div>
-    <!--<table id="networkInventory" style="width:100%;"></table>!--> 
-
-
-
-
+    <div id="networkInventoryDIV"></div> 
     <script>
-        function createTable(network, manuals) {
+        //Get state of the select and create new table using this
+        function modeChanged() {
+
+        }
+        //Networks is an array of the parsed result from nmap. Mode is how much of the data that gets displayed
+        function createTable(network, mode="all") {
+            //Just to put the code into a few sections, I wrote "blocks" surroded by { and } or for loops / while loops
+            
+            //This basicly just creates the table
             if(document.getElementById("networkInventory")) document.getElementById("networkInventory").remove();
             var div = document.getElementById("networkInventoryDIV")
             var table = document.createElement('table');
@@ -34,6 +41,7 @@
             let thead = table.createTHead();
             let row = thead.insertRow();
 
+            //THIS ADDS THE COULUMN NAMES
             if(network[0]) for (let i = 0; i < Object.keys(network[0]).length; i++) {
 
                 let th = document.createElement("th");
@@ -42,16 +50,30 @@
                 th.appendChild(text);
                 row.appendChild(th);
             }
+            
+            // THIS IF FOR ADDING MANUAL FIELD
+            {
+            
+                let th = document.createElement("th");
+                let text = document.createTextNode("manual");
+                th.appendChild(text);
+                row.appendChild(th)
+            }
 
+            
+            // This fils in data into the table
             for (let element of network) {
-                let row = table.insertRow();
-                
-                
-                //if(element.manual) row.setAttribute("onclick", `relocate("../manual/${element.model}.pdf")`)
-                for (key in element) {
-                    let cell = row.insertCell();
-                    let text = document.createTextNode(element[key]);
-                    cell.appendChild(text);
+                if (mode == "all"){
+                    let row = table.insertRow();                
+                    for (key in element) {
+                        let cell = row.insertCell();
+                        let text = document.createTextNode(element[key]);
+                        cell.appendChild(text);
+                    }
+                } else if (mode == "instruments") {
+                    if(element.manual) {
+
+                    }
                 }
             } 
             function relocate(manual) {
@@ -69,9 +91,7 @@
                 if (this.readyState == 4 && this.status == 200) {
                     console.log(JSON.parse(this.responseText));
                     network = JSON.parse(this.responseText)["inventory"]
-                    manuals = JSON.parse(this.responseText)["manuals"]
-                    createTable(network, manuals)
-                    
+                    createTable(network)
                 }
             };
             xhttp.open("POST", "/", true);
