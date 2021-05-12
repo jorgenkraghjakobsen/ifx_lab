@@ -1,7 +1,5 @@
 //const nmap = require('libnmap');
 const { exec } = require("child_process");
-var identifier = require("./detect_instrument.js")
-
 
 
 function scanHosts(callback) {

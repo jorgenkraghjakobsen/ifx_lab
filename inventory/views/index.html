@@ -11,6 +11,9 @@
 <!--    0 = all, 1 = Instruments, etc              -->
 
         network = []
+        knownManufactures = ["Tektronix"]
+
+
         //Dont worry about this, it's just to purify the data the server recieves.
         function htmlDecode(input){
           var e = document.createElement('div');
@@ -24,7 +27,7 @@
     <h1>Online Hosts.</h1>
     <label for="mode">Mode: </label>
 
-    <select onchange="modeChanged()" id="modeChanger">
+    <select onchange="modeChanged(); createTable(network)" id="modeChanger">
         <option>All: Display all network information</option> <!-- selectedindex 0-->
         <option>Instruments: Only display the instruments on the network</option> <!-- selectedindex 1-->
     </select>
@@ -38,7 +41,6 @@
           //console.log(document.getElementById('modeChanger'))
           displayMode = document.getElementById('modeChanger').selectedIndex;
           //console.log( displayMode)
-          createTable(network)
         }
 
         //Networks is an array of the parsed result from nmap. Mode is how much of the data that gets displayed
@@ -85,9 +87,18 @@
                         cell.appendChild(text);
                     }
                 } else if (displayMode == 1) {     // IF MODE Instruments
-                    if(element.manual) {
-
+                  for (let element of network) {
+                    for(i of knownManufactures) {
+                      if (element["host"]) if(element["host"].search(i) != -1) {
+                        let row = table.insertRow();
+                        for (key in element) {
+                            let cell = row.insertCell();
+                            let text = document.createTextNode(element[key]);
+                            cell.appendChild(text);
+                        }
+                      }
                     }
+                  }
                 }
             }
             function relocate(manual) {
