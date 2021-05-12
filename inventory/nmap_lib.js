@@ -26,9 +26,9 @@ function scanHosts(callback) {
         raw_result.splice(0, 1)
         raw_result.splice(-1,1)
         raw_result.splice(-1,1)
-        
 
-        for(i in raw_result) {  
+
+        for(i in raw_result) {
             if(raw_result[i].match(/Host is up/)) {
                 raw_result.splice(i, 1)
             }
@@ -45,40 +45,20 @@ function scanHosts(callback) {
         for(i=0;i<raw_result.length;i+=2) {
             tmp_obj = {}
             tmp = raw_result[i].toString().search("192.168.1");
-            
+
             raw_result[i].substring(tmp)
 
             tmp_obj["hostname/ip"] = raw_result[i];
-            
+
             if(raw_result[i+1]) tmp_obj["host"] = raw_result[i+1].split("(")[1]//.replace(")", '')
             parsed_result.push(tmp_obj)
         }
         //console.log(parsed_result)
 
-        identifyManufacturer(parsed_result, (manuals) => {
-            //console.log(manuals)
-            callback(parsed_result);
-            //callback(parsed_result);
-        })
-    }); 
-}
-function identifyManufacturer(devices, callback) {
-    manufactures = ["Tektronix"]
-    instruments = []
-    for(i of devices) {
-        for(j of manufactures) {
-            //console.log(i["host"])
-            if(i.host) if(i.host.match(j)) {
-                instruments.push(i)
-            }
-        }
-    }
-    callback(instruments)
-    //for(i in instruments) {
-    //    identifier.identifyInstrumentType(i, (manual) => {
-    //        callback(manual)
-    //    })
-    //}
+          //console.log(manuals)
+          callback(parsed_result);
+          //callback(parsed_result);
+    });
 }
 
 

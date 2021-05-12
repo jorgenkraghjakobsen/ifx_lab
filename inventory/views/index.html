@@ -4,34 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
-    <script> 
+    <script>
+        //Defining a few global variables
+
+        displayMode = 0 // 0 = The default selectedindex
+<!--    0 = all, 1 = Instruments, etc              -->
+
+        network = []
         //Dont worry about this, it's just to purify the data the server recieves.
         function htmlDecode(input){
-        var e = document.createElement('div');
-        e.innerHTML = input;
-        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+          var e = document.createElement('div');
+          e.innerHTML = input;
+          return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
         }
+
     </script>
-</head> 
+</head>
 <body>
-    <h1>Online Hosts.</h1> 
+    <h1>Online Hosts.</h1>
     <label for="mode">Mode: </label>
-    <select onchange="modeChanged()">
-        <option>All: Display all network information</option>
-        <option>Instruments: Only display the instruments on the network</option>
+
+    <select onchange="modeChanged()" id="modeChanger">
+        <option>All: Display all network information</option> <!-- selectedindex 0-->
+        <option>Instruments: Only display the instruments on the network</option> <!-- selectedindex 1-->
     </select>
+
     <button onclick="detectNetworks()">Detect</button>
-    <div id="networkInventoryDIV"></div> 
+    <div id="networkInventoryDIV"></div>
     <script>
+
         //Get state of the select and create new table using this
         function modeChanged() {
-
+          //console.log(document.getElementById('modeChanger'))
+          displayMode = document.getElementById('modeChanger').selectedIndex;
+          //console.log( displayMode)
+          createTable(network)
         }
+
         //Networks is an array of the parsed result from nmap. Mode is how much of the data that gets displayed
-        function createTable(network, mode="all") {
+        function createTable(network) {
             //Just to put the code into a few sections, I wrote "blocks" surroded by { and } or for loops / while loops
-            
             //This basicly just creates the table
+            modeChanged()
             if(document.getElementById("networkInventory")) document.getElementById("networkInventory").remove();
             var div = document.getElementById("networkInventoryDIV")
             var table = document.createElement('table');
@@ -50,41 +64,41 @@
                 th.appendChild(text);
                 row.appendChild(th);
             }
-            
+
             // THIS IF FOR ADDING MANUAL FIELD
             {
-            
+
                 let th = document.createElement("th");
                 let text = document.createTextNode("manual");
                 th.appendChild(text);
                 row.appendChild(th)
             }
 
-            
+
             // This fils in data into the table
             for (let element of network) {
-                if (mode == "all"){
-                    let row = table.insertRow();                
+                if (displayMode == 0){  // IF MODE ALL
+                    let row = table.insertRow();
                     for (key in element) {
                         let cell = row.insertCell();
                         let text = document.createTextNode(element[key]);
                         cell.appendChild(text);
                     }
-                } else if (mode == "instruments") {
+                } else if (displayMode == 1) {     // IF MODE Instruments
                     if(element.manual) {
 
                     }
                 }
-            } 
+            }
             function relocate(manual) {
                 window.location = manual;
             }
-            
+
             //p.innerHTML
         }
     </script>
     <script>
-        network = []
+
         function detectNetworks() {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
@@ -104,16 +118,16 @@
             border-collapse: collapse;
             width: 100%;
         }
-        
+
         #networkInventory td, #networkInventory th {
             border: 1px solid #ddd;
             padding: 8px;
         }
-        
+
         #networkInventory tr:nth-child(even){background-color: #f2f2f2;}
-        
+
         #networkInventory tr:hover {background-color: #ddd;}
-        
+
         #networkInventory th {
             padding-top: 12px;
             padding-bottom: 12px;
@@ -122,6 +136,6 @@
             color: white;
         }
     </style>
-        
+
 </body>
 </html>

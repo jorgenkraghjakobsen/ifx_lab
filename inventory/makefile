@@ -7,5 +7,6 @@ index:
 	scp views/index.html root@$(rpi).local:~/inventory/views/
 router:
 	scp routes/index.js root@$(rpi).local:~/inventory/routes
-general: module index router
-	
+bin:
+	scp bin/www root@$(rpi).local:/inventory/bin/www
+general: module index router bin
