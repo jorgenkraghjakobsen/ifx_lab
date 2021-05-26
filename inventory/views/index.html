@@ -8,7 +8,7 @@
         //Defining a few global variables
 
         displayMode = 0 // 0 = The default selectedindex
-<!--    0 = all, 1 = Instruments, etc              -->
+//    0 = all, 1 = Instruments, etc              
 
         network = []
         knownManufactures = ["Tektronix"]
@@ -32,7 +32,8 @@
         <option>Instruments: Only display the instruments on the network</option> <!-- selectedindex 1-->
     </select>
 
-    <button onclick="detectNetworks()">Detect</button>
+    <button onclick="detectNetworks()">Detect on network</button>
+    <button onclick="detectRaspberries()">Detect instruments connected to raspberries</button>
     <div id="networkInventoryDIV"></div>
     <script>
 
@@ -78,29 +79,32 @@
 
 
             // This fils in data into the table
-            for (let element of network) {
-                if (displayMode == 0){  // IF MODE ALL
+            if (displayMode == 0){  // IF MODE ALL
+                for (let element of network) {
                     let row = table.insertRow();
                     for (key in element) {
                         let cell = row.insertCell();
                         let text = document.createTextNode(element[key]);
                         cell.appendChild(text);
                     }
-                } else if (displayMode == 1) {     // IF MODE Instruments
-                  for (let element of network) {
+                }
+            } else if (displayMode == 1) {     // IF MODE Instruments
+                for (let element of network) {
                     for(i of knownManufactures) {
-                      if (element["host"]) if(element["host"].search(i) != -1) {
-                        let row = table.insertRow();
-                        for (key in element) {
-                            let cell = row.insertCell();
-                            let text = document.createTextNode(element[key]);
-                            cell.appendChild(text);
+                        if (element["host"]) if(element["host"].search(i) != -1) {
+                            let row = table.insertRow();
+                            for (key in element) {
+                                let cell = row.insertCell();
+                                let text = document.createTextNode(element[key]);
+                                cell.appendChild(text);
+                                
+                            }
+                            break
                         }
-                      }
                     }
-                  }
                 }
             }
+           
             function relocate(manual) {
                 window.location = manual;
             }
@@ -120,6 +124,20 @@
                 }
             };
             xhttp.open("POST", "/", true);
+            xhttp.setRequestHeader("DetectType", "network")
+            xhttp.send("");
+        }
+        function detectRaspberries() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(JSON.parse(this.responseText));
+                    network = JSON.parse(this.responseText)["inventory"]
+                    createTable(network)
+                }
+            };
+            xhttp.open("POST", "/", true);
+            xhttp.setRequestHeader("DetectType", "raspberries")
             xhttp.send("");
         }
     </script>
