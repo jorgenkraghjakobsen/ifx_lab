@@ -1,6 +1,6 @@
 let socket_lib = require('./socket_lib')
 
 
-socket_lib.device("localhost", 1337, "ping", (data) => {
+socket_lib.device("192.168.1.150", 13371, "ping", (data) => {
     console.log(data)
 })

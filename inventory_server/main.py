@@ -46,7 +46,7 @@ class Client(threading.Thread):
                 elif decodedData == "getName":
                     response = socket.gethostname()
                 elif decodedData == "ping":
-                    response = "pong!"
+                    response = "pong"
                 else: #If there was no entry for the data recieved, it will ignore the data and return
                     print("Didnt match input. Response = null")
                     response = None
@@ -76,10 +76,10 @@ def newConnections(socket):
 
 def main():
     #Get host and port
-    host = "localhost"
+    host = socket.gethostname()
     
     #PORT SHOULD BE STATIC IN PRODUCTION
-    port = 1337
+    port = 13371
     #port = int(input())
 
     #Create new server socket

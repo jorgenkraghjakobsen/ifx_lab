@@ -1,7 +1,6 @@
 //const nmap = require('libnmap');
 const { exec } = require("child_process");
 
-
 function scanHosts(callback) {
     cmd1 = "nmap -sn 192.168.0.0/24"
 	cmd2 = "nmap -sn 192.168.1.0/24"
@@ -21,41 +20,27 @@ function scanHosts(callback) {
         raw_result = stdout
 
         raw_result = raw_result.split("\n")
-        raw_result.splice(0, 1)
-        raw_result.splice(-1,1)
-        raw_result.splice(-1,1)
-
-
-        for(i in raw_result) {
-            if(raw_result[i].match(/Host is up/)) {
-                raw_result.splice(i, 1)
+        result = []
+        for(i of raw_result) {
+            if(i.match(/Nmap scan report for/)) {
+                result.push(i.replace('Nmap scan report for ', ""))
             }
         }
 
-        for(i in raw_result) {
-            if(raw_result[i].match(/Nmap scan report for/)) {
-                raw_result[i] = raw_result[i].replace('Nmap scan report for ', "")
-            } else {
-                raw_result[i] = raw_result[i].replace(')', "")
-            }
-        }
-
-        for(i=0;i<raw_result.length;i+=2) {
+        for(i=0;i<result.length;i++) {
             tmp_obj = {}
-            tmp = raw_result[i].toString().search("192.168.1");
-
-            raw_result[i].substring(tmp)
-
-            tmp_obj["hostname/ip"] = raw_result[i];
-
-            if(raw_result[i+1]) tmp_obj["host"] = raw_result[i+1].split("(")[1]//.replace(")", '')
+            tmp = result[i].match(/\(.*?\)/)
+            if (tmp != null) {
+                tmp_obj["ip"] = tmp[0].replace("(","").replace(")","")
+                tmp_obj["hostname"] = result[i].split(" (")[0]
+            } else {
+                tmp_obj["ip"] = result[i]
+                tmp_obj["hostname"] = undefined
+            }
             parsed_result.push(tmp_obj)
         }
-        //console.log(parsed_result)
 
-          //console.log(manuals)
           callback(parsed_result);
-          //callback(parsed_result);
     });
 }
 

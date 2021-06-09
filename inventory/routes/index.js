@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const fs = require('fs');
 var nmap = require("../resources/nmap_lib.js")
-//var socket = require("../resources/socket_lib.js")   MAKE SURE TO UNCOMMENT THIS IN PRODUCTION
+let socket = require('../resources/socket_lib.js')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -14,18 +14,47 @@ router.post('/', function(req, res) {
     
     if(req.headers.detecttype) {
         if(req.headers.detecttype == "raspberries") {
-            res.end(JSON.stringify({"raspberries" : "comming soon"}))
+            networkScan(res, (r) => {
+                for(i of r) {
+                    //socket.device(i["ip"], 13371, "ping", (data) => {
+                    s1 = new socket.device(i["ip"], 13371, "ping", (err, data, host) => {
+                        if(data=="err") {
+                        } else {
+                            console.log(data + " from " + host)
+
+                           /* s2 = new socket.device(host, 13371, "getDevices", (err, data, host) => {
+                                if(err!=null) {
+                                    console.log(err)
+                                } else {
+                                    console.log(data + " from " + host)
+                                }
+                            });*/
+                        }
+                    });
+                    /*socket.device("192.168.1.150", 13371, "ping", (data) => {
+                        //if(data=="err") {
+                        //} else {
+                            console.log(data)
+                        //}
+                    });*/
+                }    
+                res.end(JSON.stringify({"inventory" : r}))
+            })
         } else {
-            networkScan(res)
+            networkScan(res, (r) => {
+                res.end(JSON.stringify({"inventory" : r}))
+            })
         }
     } else {
-        networkScan(res)
+        networkScan(res, (r) => {
+            res.end(JSON.stringify({"inventory" : r}))
+        })
     }
     
 });
-function networkScan(res) {
+function networkScan(res, callback) {
      nmap.scanHosts((r) => {
-        res.end(JSON.stringify({"inventory" : r}))
+        callback(r)
     })
 }
 

@@ -32,8 +32,9 @@
         <option>Instruments: Only display the instruments on the network</option> <!-- selectedindex 1-->
     </select>
 
-    <button onclick="detectNetworks()">Detect on network</button>
-    <button onclick="detectRaspberries()">Detect instruments connected to raspberries</button>
+    <button onclick="detect()">Detect on network</button>
+    <input type="checkbox" id="raspberries" name="raspberries">
+    <label for="raspberries">Detect instruments connected to raspberries</label>
     <div id="networkInventoryDIV"></div>
     <script>
 
@@ -113,7 +114,14 @@
         }
     </script>
     <script>
-
+        function detect( ) {
+            value = document.getElementById('raspberries').checked;
+            if(value){
+                detectRaspberries()
+            } else{
+                detectNetworks()
+            }
+        }
         function detectNetworks() {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
