@@ -14,32 +14,60 @@ router.post('/', function(req, res) {
     
     if(req.headers.detecttype) {
         if(req.headers.detecttype == "raspberries") {
+            c = 0 
             networkScan(res, (r) => {
-                for(i of r) {
-                    //socket.device(i["ip"], 13371, "ping", (data) => {
-                    s1 = new socket.device(i["ip"], 13371, "ping", (err, data, host) => {
-                        if(data=="err") {
-                        } else {
-                            console.log(data + " from " + host)
+                console.log(Object.keys(r).length)
+                for(i in r) {
+                    (function(curI) {
+                        s1 = new socket.device(r[curI]["ip"], 13371, "ping", (err, data, host) => {
+                            if(data=="err") {
+                                c++
+                            } else {
+                                console.log(data + " from " + host)
+                                s2 = new socket.device(r[curI]["ip"], 13371, "getInstruments", (err, data, host) => {
+                                    if(data=="err") {
+                                        console.error(err)
 
-                           /* s2 = new socket.device(host, 13371, "getDevices", (err, data, host) => {
-                                if(err!=null) {
-                                    console.log(err)
-                                } else {
-                                    console.log(data + " from " + host)
+                                    } else {
+                                        r[curI].socket = "open"
+                                        s3 = new socket.device(r[curI]["ip"], 13371, "getName", (err, data, host) => {
+                                            if(data=="err") {
+                                                console.error(err)
+
+                                            } else {
+                                                r[curI].hostname = data
+                                                c++
+                                                console.log(c)
+                                                if(c == Object.keys(r).length-1) {                  
+                                                    res.end(JSON.stringify({"inventory" : r}))
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                            console.log(c)
+                            if(c == Object.keys(r).length-1) {                  
+                                res.end(JSON.stringify({"inventory" : r}))
+                            }
+                        });
+                    })(i)
+                }
+                /*while(!finishedFor) {
+                    if(finished) {
+                        for(j of r) {
+                            if(j.socket) {
+                                console.log("far")
+                                if(!j.hostname) {
+                                    continue;
                                 }
-                            });*/
+                            }
                         }
-                    });
-                    /*socket.device("192.168.1.150", 13371, "ping", (data) => {
-                        //if(data=="err") {
-                        //} else {
-                            console.log(data)
-                        //}
-                    });*/
-                }    
-                res.end(JSON.stringify({"inventory" : r}))
-            })
+                        res.end(JSON.stringify({"inventory" : r}))
+                        finishedFor = true
+                    }
+                }*/
+            });
         } else {
             networkScan(res, (r) => {
                 res.end(JSON.stringify({"inventory" : r}))

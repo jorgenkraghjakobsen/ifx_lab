@@ -2,5 +2,5 @@ import pyvisa as visa
 
 
 def getConnetedDevices():
-    rm = visa.ResourceManager('@ivi')
+    rm = visa.ResourceManager()
     return rm.list_resources()

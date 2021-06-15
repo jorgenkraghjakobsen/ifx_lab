@@ -13,6 +13,8 @@
         network = []
         knownManufactures = ["Tektronix"]
 
+        SHOWKEYS = ["ip", "hostname", "socket"]
+
 
         //Dont worry about this, it's just to purify the data the server recieves.
         function htmlDecode(input){
@@ -60,22 +62,22 @@
             let row = thead.insertRow();
 
             //THIS ADDS THE COULUMN NAMES
-            if(network[0]) for (let i = 0; i < Object.keys(network[0]).length; i++) {
+            KEYS = []
+            for(k in network) {
+                for(l of Object.keys(network[k])) {
+                    if(KEYS.includes(l)) {
 
+                    } else {
+                        KEYS.push(l)
+                    }
+                }
+            }
+            if(network[0]) for (i of SHOWKEYS) {
                 let th = document.createElement("th");
                 rows = Object.keys(network[0])
-                let text = document.createTextNode(rows[i]);
+                let text = document.createTextNode(i);
                 th.appendChild(text);
                 row.appendChild(th);
-            }
-
-            // THIS IF FOR ADDING MANUAL FIELD
-            {
-
-                let th = document.createElement("th");
-                let text = document.createTextNode("manual");
-                th.appendChild(text);
-                row.appendChild(th)
             }
 
 
@@ -83,11 +85,23 @@
             if (displayMode == 0){  // IF MODE ALL
                 for (let element of network) {
                     let row = table.insertRow();
-                    for (key in element) {
+                    for (key in SHOWKEYS) {
+                        let cell = row.insertCell();
+
+                        let text
+                        if(Object.keys(element).includes(SHOWKEYS[key])) {
+                            text = document.createTextNode(element[SHOWKEYS[key]]);
+                        } else {
+                            text = document.createTextNode("");
+                        }
+                        cell.appendChild(text);
+
+                    }
+/*                    for (key in ) {
+                        console.log(key)
                         let cell = row.insertCell();
                         let text = document.createTextNode(element[key]);
-                        cell.appendChild(text);
-                    }
+                    }*/
                 }
             } else if (displayMode == 1) {     // IF MODE Instruments
                 for (let element of network) {
@@ -98,7 +112,6 @@
                                 let cell = row.insertCell();
                                 let text = document.createTextNode(element[key]);
                                 cell.appendChild(text);
-                                
                             }
                             break
                         }

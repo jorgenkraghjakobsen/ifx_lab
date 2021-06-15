@@ -41,7 +41,7 @@ class Client(threading.Thread):
                 response = ""
                 decodedData = data.decode("utf-8")
                 #Attempt to read respone.
-                if decodedData == "getDevices":  #Will respond with a list of connected instruments
+                if decodedData == "getInstruments":  #Will respond with a list of connected instruments
                     response = instruments.getConnetedDevices()
                 elif decodedData == "getName":
                     response = socket.gethostname()
