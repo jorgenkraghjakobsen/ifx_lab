@@ -22,7 +22,7 @@ class device {
 
     this.client.on('data', (data) => {
       this.client.end()
-      this.callback(null,data.toString(), this.host)
+      this.callback(null, data.toString(), this.host)
     });
 
     this.client.on('error', function(err) {
@@ -30,21 +30,5 @@ class device {
     })
   }
 }
-/*
-function device(host, port, message, callback) {
-  console.log(host)
-  client = net.connect({port: port, host: host});
-  
-  client.on('connect', function() {
-    client.write(message)
-  });
-  client.on('error', function(err) {
-    callback('err')
-  })
-  client.on('data', (data) => {
-    client.end()
-    callback(data.toString())
-  });
-}*/
 
 exports.device = device;

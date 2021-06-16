@@ -8,65 +8,61 @@ let socket = require('../resources/socket_lib.js')
 router.get('/', function(req, res, next) {
     res.render('index', { title : 'Express'})
 });
-
 router.post('/', function(req, res) {
     console.log(req.headers.detecttype)
     
     if(req.headers.detecttype) {
         if(req.headers.detecttype == "raspberries") {
-            c = 0 
             networkScan(res, (r) => {
+                jobs = []
                 console.log(Object.keys(r).length)
                 for(i in r) {
-                    (function(curI) {
+                    console.log(i)
+                    jobs.push(i)
+                }
+                
+                for(i in r) {
+                    (function(curI, callback) {
+                        if(curI == 8 || curI == 0) {
+                            console.log(r[curI]["ip"])
+                        }
                         s1 = new socket.device(r[curI]["ip"], 13371, "ping", (err, data, host) => {
                             if(data=="err") {
-                                c++
+                                callback(r, curI)
                             } else {
                                 console.log(data + " from " + host)
+                                r[curI].socket = "open"
                                 s2 = new socket.device(r[curI]["ip"], 13371, "getInstruments", (err, data, host) => {
                                     if(data=="err") {
                                         console.error(err)
 
                                     } else {
-                                        r[curI].socket = "open"
+                                        console.log(data)
+                                        if(data != "[]") {data = JSON.parse(data); r[curI].instruments = data.join(", ");}
+                                        else {r[curI].instruments = "No instruments connected"}
                                         s3 = new socket.device(r[curI]["ip"], 13371, "getName", (err, data, host) => {
                                             if(data=="err") {
                                                 console.error(err)
-
                                             } else {
                                                 r[curI].hostname = data
-                                                c++
-                                                console.log(c)
-                                                if(c == Object.keys(r).length-1) {                  
-                                                    res.end(JSON.stringify({"inventory" : r}))
-                                                }
+                                                callback(r, curI)
                                             }
                                         });
                                     }
                                 });
                             }
-                            console.log(c)
-                            if(c == Object.keys(r).length-1) {                  
-                                res.end(JSON.stringify({"inventory" : r}))
-                            }
                         });
-                    })(i)
-                }
-                /*while(!finishedFor) {
-                    if(finished) {
-                        for(j of r) {
-                            if(j.socket) {
-                                console.log("far")
-                                if(!j.hostname) {
-                                    continue;
-                                }
-                            }
+                    })(i, (r, curI) => {
+                        jobs.splice(0, 1)
+                        if(jobs.length == 2) {    
+                            console.log(jobs)              
+                            res.end(JSON.stringify({"inventory" : r}))
+                            console.log("Hit")
+                        } else if (jobs.length < 8) {
+                            console.log(jobs)
                         }
-                        res.end(JSON.stringify({"inventory" : r}))
-                        finishedFor = true
-                    }
-                }*/
+                    })
+                }
             });
         } else {
             networkScan(res, (r) => {
@@ -80,6 +76,7 @@ router.post('/', function(req, res) {
     }
     
 });
+
 function networkScan(res, callback) {
      nmap.scanHosts((r) => {
         callback(r)
