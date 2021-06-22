@@ -4,6 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
+    <style>
+        body {font-family: Arial;}
+        
+        /* Style the tab */
+        .tab {
+          overflow: hidden;
+          border: 1px solid #ccc;
+          background-color: #f1f1f1;
+        }
+        
+        /* Style the buttons inside the tab */
+        .tab button {
+          background-color: inherit;
+          float: left;
+          border: none;
+          outline: none;
+          cursor: pointer;
+          padding: 14px 16px;
+          transition: 0.3s;
+          font-size: 17px;
+        }
+        
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+          background-color: #ddd;
+        }
+        
+        /* Create an active/current tablink class */
+        .tab button.active {
+          background-color: #ccc;
+        }
+        
+        /* Style the tab content */
+        .tabcontent {
+          display: none;
+          padding: 6px 12px;
+          border: 1px solid #ccc;
+          border-top: none;
+        }
+    </style>
     <script>
         //Defining a few global variables
 
@@ -37,8 +77,81 @@
     <button onclick="detect()">Detect on network</button>
     <input type="checkbox" id="raspberries" name="raspberries">
     <label for="raspberries">Detect instruments connected to raspberries</label>
-    <div id="networkInventoryDIV"></div>
-    <script>
+    <div class="tab" id="tabs">
+        <button id="mainTab" class="tablinks" onclick="changeTab(event, 'networkInventoryDIV')">Main</button>
+    </div>
+
+    <nav id="switch">
+        <div id="networkInventoryDIV" class="tabcontent"></div>
+    </nav>
+    <script> //Handling tab stuff
+        function createTab(tabName) {
+            if(document.getElementById(tabName) == undefined) {
+                var tabsElm = document.getElementById('tabs')
+                var btn = document.createElement("BUTTON");
+                btn.setAttribute('class', "tablinks")
+                btn.onclick = function( ) {
+                    changeTab(event, tabName)
+                }
+                btn.innerHTML = tabName
+                tabsElm.appendChild(btn)
+
+                //Create the element in the elm list
+                var infoSwitch = document.getElementById("switch")
+                var infoDiv = document.createElement('DIV')
+
+                infoDiv.setAttribute("class", "tabcontent")
+                thisElement = getSingleElement(network, tabName)
+                createSingleTable(infoDiv, network, tabName, thisElement)
+
+                var infoDivP = document.createElement('P')
+                infoDivP.innerHTML = tabName
+                infoDiv.appendChild(infoDivP)
+
+//                var infoDivP = document.createElement('p')
+//                infoDivP.innerHTML = thisElement["i2c_data"]
+//                infoDiv.appendChild(infoDivP)
+                
+                i2c_data_parsed = []
+                thisElement["i2c_data"] = JSON.parse(thisElement["i2c_data"])
+                for(i in thisElement["i2c_data"]) {
+                    i2c_data_parsed.push([])
+                    i2c_data_parsed[i].push(thisElement["i2c_data"][i].split(" "))
+                }
+                console.log(i2c_data_parsed)
+
+                var table = document.createElement('table');
+                for (var i = 0; i < i2c_data_parsed.length; i++) {
+                    var row = document.createElement('tr');
+                    for (var j = 0; j < i2c_data_parsed[i].length; j++) {
+                        var cell = document.createElement('td');
+                        cell.textContent = i2c_data_parsed[i][j];
+                        row.appendChild(cell);
+                    }
+                    table.appendChild(row);
+                }
+                infoDiv.appendChild(table);
+
+                infoDiv.id = tabName
+                infoSwitch.appendChild(infoDiv)
+            }
+        }
+        function changeTab(evt, thisName) {
+            //Create the tab in tablist
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(thisName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+    <script> //Handling and creating table stuff
 
         //Get state of the select and create new table using this
         function modeChanged() {
@@ -46,12 +159,16 @@
           displayMode = document.getElementById('modeChanger').selectedIndex;
           //console.log( displayMode)
         }
-
         //Networks is an array of the parsed result from nmap. Mode is how much of the data that gets displayed
         function createTable(network) {
             //Just to put the code into a few sections, I wrote "blocks" surroded by { and } or for loops / while loops
             //This basicly just creates the table
             modeChanged()
+            
+            //Set the default / main tab to active
+            document.getElementById('networkInventoryDIV').style.display = "block";
+            document.getElementById('mainTab').className += " active";
+
             if(document.getElementById("networkInventory")) document.getElementById("networkInventory").remove();
             var div = document.getElementById("networkInventoryDIV")
             var table = document.createElement('table');
@@ -60,6 +177,14 @@
             div.appendChild(table)
             let thead = table.createTHead();
             let row = thead.insertRow();
+
+            //Removes elements from the tab list
+            const parent = document.getElementById('tabs');
+            const keepElem = document.getElementById('mainTab');
+                
+            [...parent.children]
+                .forEach(child => child !== keepElem ? parent.removeChild(child) : null);
+
 
             //THIS ADDS THE COULUMN NAMES
             KEYS = []
@@ -85,9 +210,11 @@
             if (displayMode == 0){  // IF MODE ALL
                 for (let element of network) {
                     let row = table.insertRow();
+                    row.onclick = function( ) {
+                        if(element.hostname) { createTab(element.hostname) } else {createTab(element.ip)}
+                    }
                     for (key in SHOWKEYS) {
                         let cell = row.insertCell();
-
                         let text
                         if(Object.keys(element).includes(SHOWKEYS[key])) {
                             text = document.createTextNode(element[SHOWKEYS[key]]);
@@ -108,6 +235,7 @@
                     for(i of knownManufactures) {
                         if (element["host"]) if(element["host"].search(i) != -1) {
                             let row = table.insertRow();
+                
                             for (key in element) {
                                 let cell = row.insertCell();
                                 let text = document.createTextNode(element[key]);
@@ -125,8 +253,79 @@
 
             //p.innerHTML
         }
+        function createSingleTable(parent, network, tabName, curElm) {
+            var div = parent
+            var table = document.createElement('table');
+            table.setAttribute("id", tabName + "Table")
+            table.setAttribute("style", "width:100%")
+            div.appendChild(table)
+            let thead = table.createTHead();
+            let row = thead.insertRow();
+
+            table.setAttribute("id", "singleTable")
+
+            //THIS ADDS THE COULUMN NAMES
+            KEYS = []
+            for(k in network) {
+                for(l of Object.keys(network[k])) {
+                    if(KEYS.includes(l)) {
+
+                    } else {
+                        KEYS.push(l)
+                    }
+                }
+            }
+            if(network[0]) for (i of SHOWKEYS) {
+                let th = document.createElement("th");
+                rows = Object.keys(network[0])
+                let text = document.createTextNode(i);
+                th.appendChild(text);
+                row.appendChild(th);
+            }
+
+
+
+            // This fils in data into the table
+
+            row = table.insertRow();
+
+            for (key in SHOWKEYS) {
+                let cell = row.insertCell();
+                let text
+                if(Object.keys(curElm).includes(SHOWKEYS[key])) {
+                    text = document.createTextNode(curElm[SHOWKEYS[key]]);
+                } else {
+                    text = document.createTextNode("");
+                }
+                cell.appendChild(text);
+
+            }
+/*                    for (key in ) {
+                console.log(key)
+                let cell = row.insertCell();
+                let text = document.createTextNode(element[key]);
+            }*/
+
+        }
+        function getSingleElement(network, tabName) {
+            var curElm
+            //Find specific element using the network and tabName
+            for(let element of network) {
+                if(element.hostname) {
+                    if(element.hostname == tabName) {
+                        curElm = element
+                
+                    }
+                } else {
+                    if(element.ip == tabName) {
+                        curElm = element
+                    }
+                }
+            }
+            return curElm
+        }
     </script>
-    <script>
+    <script> //Doing some networking stuff
         function detect( ) {
             value = document.getElementById('raspberries').checked;
             if(value){
@@ -179,6 +378,29 @@
         #networkInventory tr:hover {background-color: #ddd;}
 
         #networkInventory th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #313131;
+            color: white;
+        }
+
+        #singleTable {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #singleTable td, #singleTable th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #singleTable tr:nth-child(even){background-color: #f2f2f2;}
+
+        #singleTable tr:hover {background-color: #ddd;}
+
+        #singleTable th {
             padding-top: 12px;
             padding-bottom: 12px;
             text-align: left;

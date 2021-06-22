@@ -8,23 +8,18 @@ let socket = require('../resources/socket_lib.js')
 router.get('/', function(req, res, next) {
     res.render('index', { title : 'Express'})
 });
-router.post('/', function(req, res) {
-    console.log(req.headers.detecttype)
-    
+router.post('/', function(req, res) {    
     if(req.headers.detecttype) {
         if(req.headers.detecttype == "raspberries") {
             networkScan(res, (r) => {
                 jobs = []
-                console.log(Object.keys(r).length)
                 for(i in r) {
-                    console.log(i)
                     jobs.push(i)
                 }
                 
                 for(i in r) {
                     (function(curI, callback) {
                         if(curI == 8 || curI == 0) {
-                            console.log(r[curI]["ip"])
                         }
                         s1 = new socket.device(r[curI]["ip"], 13371, "ping", (err, data, host) => {
                             if(data=="err") {
@@ -37,7 +32,7 @@ router.post('/', function(req, res) {
                                         console.error(err)
 
                                     } else {
-                                        console.log(data)
+//                                        console.log(data)
                                         if(data != "[]") {data = JSON.parse(data); r[curI].instruments = data.join(", ");}
                                         else {r[curI].instruments = "No instruments connected"}
                                         s3 = new socket.device(r[curI]["ip"], 13371, "getName", (err, data, host) => {
@@ -45,7 +40,15 @@ router.post('/', function(req, res) {
                                                 console.error(err)
                                             } else {
                                                 r[curI].hostname = data
-                                                callback(r, curI)
+                                                s4 = new socket.device(r[curI]["ip"], 13371, "getI2c", (err, data, host) => {
+                                                    if(data=="err") {
+                                                        console.error(err)
+                                                    } else {
+                                                        r[curI].i2c_data = data
+                                                        console.log("asd")
+                                                        callback(r, curI)
+                                                    }
+                                                });
                                             }
                                         });
                                     }
@@ -55,11 +58,8 @@ router.post('/', function(req, res) {
                     })(i, (r, curI) => {
                         jobs.splice(0, 1)
                         if(jobs.length == 2) {    
-                            console.log(jobs)              
                             res.end(JSON.stringify({"inventory" : r}))
-                            console.log("Hit")
                         } else if (jobs.length < 8) {
-                            console.log(jobs)
                         }
                     })
                 }

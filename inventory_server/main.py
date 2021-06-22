@@ -5,6 +5,7 @@ import json
 
 #CUSTOM RESOURCES
 import resources.pyvisa_lib as instruments
+import resources.i2c_lib as i2c_lib
 
 #Variables for holding information about connections
 connections = []
@@ -39,12 +40,15 @@ class Client(threading.Thread):
             if str(data.decode("utf-8")) != "":
                 print("ID " + str(self.id) + ": " + str(data.decode("utf-8")))
                 response = ""
-                decodedData = data.decode("utf-8")
+                decodedData = data.decode("utf-8").rstrip()
                 #Attempt to read respone.
                 if decodedData == "getInstruments":  #Will respond with a list of connected instruments
-                    response = instruments.getConnetedDevices()
+                    response = instruments.listResources()
                 elif decodedData == "getName":
                     response = socket.gethostname()
+                elif decodedData == "getI2c":
+                    cur = i2c_lib.getI2c()
+                    response = cur.decode('ascii').split('\n')#.decode('ascii')
                 elif decodedData == "ping":
                     response = "pong"
                 else: #If there was no entry for the data recieved, it will ignore the data and return
@@ -84,6 +88,7 @@ def main():
 
     #Create new server socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind((host, port))
     sock.listen(5)
 

@@ -1,6 +1,6 @@
 import pyvisa as visa
 
 
-def getConnetedDevices():
+def listResources():
     rm = visa.ResourceManager()
     return rm.list_resources()
