@@ -1,6 +1,6 @@
 import pyvisa as visa
 
+rm = visa.ResourceManager()
 
 def listResources():
-    rm = visa.ResourceManager()
     return rm.list_resources()

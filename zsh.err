@@ -1,0 +1,633 @@
++omz_termsupport_precmd:1> [[ '' == true ]]
++omz_termsupport_precmd:2> title '%15<..<%~%<<' '%n@%m:%~'
++title:1> emulate -L zsh
++title:2> setopt prompt_subst
++title:4> [[ '' == *term* ]]
++title:8> : '%n@%m:%~'
++title:10> case xterm (cygwin | xterm*)
++title:12> print -Pn '\e]2;%n@%m:%~\a'
++title:13> print -Pn '\e]1;%15\<..\<%~%\<\<\a'
++zsh:13> build_prompt
++build_prompt:1> RETVAL=0 
++build_prompt:2> prompt_status
++prompt_status:1> local -a symbols
++prompt_status:3> [[ 0 -ne 0 ]]
++prompt_status:4> [[ 4015 -eq 0 ]]
++prompt_status:5> [[+prompt_status:5> [[+prompt_status:5> jobs -l
++prompt_status:5> wc -l
++prompt_status:5> [[ 0 -gt 0 ]]
++prompt_status:7> [[ -n '' ]]
++build_prompt:3> prompt_virtualenv
++prompt_virtualenv:1> local virtualenv_path=''
++prompt_virtualenv:2> [[ -n '' ]]
++build_prompt:4> prompt_aws
++prompt_aws:1> [[ -z '' ]]
++prompt_aws:1> return
++build_prompt:5> prompt_context
++prompt_context:1> [[ mci !=  ]]
++prompt_context:2> tput setaf 3
++prompt_context:2> tput setaf 2
++prompt_context:2> tput setaf 4
++prompt_context:2> prompt_segment NONE default $'\C-[[33m%(!.%{%F{yellow}%}.)%n\C-[[32m@\C-[[34m%m'
++prompt_segment:1> local bg fg
++prompt_segment:2> [[ -n NONE ]]
++prompt_segment:2> bg='%K{NONE}' 
++prompt_segment:3> [[ -n default ]]
++prompt_segment:3> fg='%F{default}' 
++prompt_segment:4> [[ NONE != NONE ]]
++prompt_segment:7> echo -n '%{%K{NONE}%}%{%F{default}%} '
++prompt_segment:9> CURRENT_BG=NONE 
++prompt_segment:10> [[ -n $'\C-[[33m%(!.%{%F{yellow}%}.)%n\C-[[32m@\C-[[34m%m' ]]
++prompt_segment:10> echo -n $'\C-[[33m%(!.%{%F{yellow}%}.)%n\C-[[32m@\C-[[34m%m'
++build_prompt:6> prompt_dir
++prompt_dir:1> prompt_segment blue black '%~'
++prompt_segment:1> local bg fg
++prompt_segment:2> [[ -n blue ]]
++prompt_segment:2> bg='%K{blue}' 
++prompt_segment:3> [[ -n black ]]
++prompt_segment:3> fg='%F{black}' 
++prompt_segment:4> [[ NONE != NONE ]]
++prompt_segment:7> echo -n '%{%K{blue}%}%{%F{black}%} '
++prompt_segment:9> CURRENT_BG=blue 
++prompt_segment:10> [[ -n '%~' ]]
++prompt_segment:10> echo -n '%~'
++build_prompt:7> prompt_git
++prompt_git:1> ((  1  ))
++prompt_git:2> [[+prompt_git:2> git config --get oh-my-zsh.hide-status
++prompt_git:2> [[ '' = 1 ]]
++prompt_git:5> local PL_BRANCH_CHAR
++prompt_git:6> '(anon)'
++(anon):1> local LC_ALL='' LC_CTYPE=en_US.UTF-8
++(anon):2> PL_BRANCH_CHAR= 
++prompt_git:10> local ref dirty mode repo_path
++prompt_git:12> [[+prompt_git:12> git rev-parse --is-inside-work-tree
++prompt_git:12> [[ true = true ]]
++prompt_git:13> repo_path=+prompt_git:13> git rev-parse --git-dir
++prompt_git:13> repo_path=.git 
++prompt_git:14> dirty=+prompt_git:14> parse_git_dirty
++parse_git_dirty:1> local STATUS
++parse_git_dirty:2> local -a FLAGS
++parse_git_dirty:3> FLAGS=( --porcelain ) 
++parse_git_dirty:4> [[+parse_git_dirty:4> __git_prompt_git config --get oh-my-zsh.hide-dirty
++__git_prompt_git:1> GIT_OPTIONAL_LOCKS=0 git config --get oh-my-zsh.hide-dirty
++parse_git_dirty:4> [[ '' != 1 ]]
++parse_git_dirty:5> [[ '' == true ]]
++parse_git_dirty:8> case  (git)
++parse_git_dirty:8> case  (*)
++parse_git_dirty:15> FLAGS+='--ignore-submodules=dirty' 
++parse_git_dirty:18> STATUS=+parse_git_dirty:18> STATUS=+parse_git_dirty:18> __git_prompt_git status --porcelain '--ignore-submodules=dirty'
++parse_git_dirty:18> tail -1
++parse_git_dirty:18> STATUS='?? zsh.err' 
++parse_git_dirty:20> [[ -n '?? zsh.err' ]]
++parse_git_dirty:21> echo '*'
++prompt_git:14> dirty='*' 
++prompt_git:15> ref=+prompt_git:15> git symbolic-ref HEAD
++prompt_git:15> ref=refs/heads/main 
++prompt_git:16> [[ -n '*' ]]
++prompt_git:17> prompt_segment yellow black
++prompt_segment:1> local bg fg
++prompt_segment:2> [[ -n yellow ]]
++prompt_segment:2> bg='%K{yellow}' 
++prompt_segment:3> [[ -n black ]]
++prompt_segment:3> fg='%F{black}' 
++prompt_segment:4> [[ blue != NONE && yellow != blue ]]
++prompt_segment:5> echo -n $' %{%K{yellow}%F{blue}%}\M-n\M-\C-B\M-0%{%F{black}%} '
++prompt_segment:9> CURRENT_BG=yellow 
++prompt_segment:10> [[ -n '' ]]
++prompt_git:22> [[ -e .git/BISECT_LOG ]]
++prompt_git:24> [[ -e .git/MERGE_HEAD ]]
++prompt_git:26> [[ -e .git/rebase || -e .git/rebase-apply || -e .git/rebase-merge || -e .git/../.dotest ]]
++prompt_git:30> setopt promptsubst
++prompt_git:31> autoload -Uz vcs_info
++prompt_git:33> zstyle ':vcs_info:*' enable git
++prompt_git:34> zstyle ':vcs_info:*' get-revision true
++prompt_git:35> zstyle ':vcs_info:*' check-for-changes true
++prompt_git:36> zstyle ':vcs_info:*' stagedstr $'\M-b\M-\C-\\M-\C-Z'
++prompt_git:37> zstyle ':vcs_info:*' unstagedstr $'\M-B\M-1'
++prompt_git:38> zstyle ':vcs_info:*' formats ' %u%c'
++prompt_git:39> zstyle ':vcs_info:*' actionformats ' %u%c'
++prompt_git:40> vcs_info
++vcs_info:11> setopt localoptions noksharrays extendedglob NO_shwordsplit
++vcs_info:12> local file func sys
++vcs_info:13> local -a static_functions msgs
++vcs_info:14> local -i maxexports
++vcs_info:16> static_functions=( VCS_INFO_adjust VCS_INFO_bydir_detect VCS_INFO_check_com VCS_INFO_formats VCS_INFO_get_cmd VCS_INFO_hexdump VCS_INFO_hook VCS_INFO_set-patch-format VCS_INFO_maxexports VCS_INFO_nvcsformats VCS_INFO_patch2subject VCS_INFO_quilt VCS_INFO_realpath VCS_INFO_reposub VCS_INFO_set vcs_info_hookadd vcs_info_hookdel vcs_info_lastmsg vcs_info_printsys vcs_info_setsys ) 
++vcs_info:40> func=VCS_INFO_adjust
++vcs_info:41> autoload -Uz VCS_INFO_adjust
++vcs_info:40> func=VCS_INFO_bydir_detect
++vcs_info:41> autoload -Uz VCS_INFO_bydir_detect
++vcs_info:40> func=VCS_INFO_check_com
++vcs_info:41> autoload -Uz VCS_INFO_check_com
++vcs_info:40> func=VCS_INFO_formats
++vcs_info:41> autoload -Uz VCS_INFO_formats
++vcs_info:40> func=VCS_INFO_get_cmd
++vcs_info:41> autoload -Uz VCS_INFO_get_cmd
++vcs_info:40> func=VCS_INFO_hexdump
++vcs_info:41> autoload -Uz VCS_INFO_hexdump
++vcs_info:40> func=VCS_INFO_hook
++vcs_info:41> autoload -Uz VCS_INFO_hook
++vcs_info:40> func=VCS_INFO_set-patch-format
++vcs_info:41> autoload -Uz VCS_INFO_set-patch-format
++vcs_info:40> func=VCS_INFO_maxexports
++vcs_info:41> autoload -Uz VCS_INFO_maxexports
++vcs_info:40> func=VCS_INFO_nvcsformats
++vcs_info:41> autoload -Uz VCS_INFO_nvcsformats
++vcs_info:40> func=VCS_INFO_patch2subject
++vcs_info:41> autoload -Uz VCS_INFO_patch2subject
++vcs_info:40> func=VCS_INFO_quilt
++vcs_info:41> autoload -Uz VCS_INFO_quilt
++vcs_info:40> func=VCS_INFO_realpath
++vcs_info:41> autoload -Uz VCS_INFO_realpath
++vcs_info:40> func=VCS_INFO_reposub
++vcs_info:41> autoload -Uz VCS_INFO_reposub
++vcs_info:40> func=VCS_INFO_set
++vcs_info:41> autoload -Uz VCS_INFO_set
++vcs_info:40> func=vcs_info_hookadd
++vcs_info:41> autoload -Uz vcs_info_hookadd
++vcs_info:40> func=vcs_info_hookdel
++vcs_info:41> autoload -Uz vcs_info_hookdel
++vcs_info:40> func=vcs_info_lastmsg
++vcs_info:41> autoload -Uz vcs_info_lastmsg
++vcs_info:40> func=vcs_info_printsys
++vcs_info:41> autoload -Uz vcs_info_printsys
++vcs_info:40> func=vcs_info_setsys
++vcs_info:41> autoload -Uz vcs_info_setsys
++vcs_info:44> [[ -n '' ]]
++vcs_info:45> VCS_INFO_maxexports
++VCS_INFO_maxexports:5> setopt localoptions NO_shwordsplit unset
++VCS_INFO_maxexports:7> zstyle -s :vcs_info::: max-exports maxexports
++VCS_INFO_maxexports:7> maxexports=2 
++VCS_INFO_maxexports:8> [[ 2 != <-> ]]
++VCS_INFO_maxexports:8> ((  maxexports < 1  ))
++VCS_INFO_maxexports:13> return 0
++vcs_info:46> VCS_INFO_set --nvcs -preinit-
++VCS_INFO_set:5> setopt localoptions noksharrays NO_shwordsplit unset
++VCS_INFO_set:6> local -i i j
++VCS_INFO_set:8> [[ --nvcs == --nvcs ]]
++VCS_INFO_set:9> [[ -preinit- == -preinit- ]]
++VCS_INFO_set:9> ((  maxexports == 0  ))
++VCS_INFO_set:10> i=0
++VCS_INFO_set:11> typeset -g 'vcs_info_msg_0_='
++VCS_INFO_set:10> i=1
++VCS_INFO_set:11> typeset -g 'vcs_info_msg_1_='
++VCS_INFO_set:13> VCS_INFO_nvcsformats -preinit-
++VCS_INFO_nvcsformats:5> setopt localoptions noksharrays NO_shwordsplit
++VCS_INFO_nvcsformats:6> local c v rr
++VCS_INFO_nvcsformats:8> [[ -preinit- == -preinit- ]]
++VCS_INFO_nvcsformats:9> c=default 
++VCS_INFO_nvcsformats:10> v=-preinit- 
++VCS_INFO_nvcsformats:11> rr=-all- 
++VCS_INFO_nvcsformats:13> zstyle -a :vcs_info:-preinit-:default:-all- nvcsformats msgs
++VCS_INFO_nvcsformats:14> ((  0 > maxexports  ))
++VCS_INFO_nvcsformats:15> return 0
++VCS_INFO_set:14> [[ -preinit- != -preinit- ]]
++VCS_INFO_set:17> ((  0 - 1 < 0  ))
++VCS_INFO_set:17> return 0
++vcs_info:47> vcs_info_setsys
++vcs_info_setsys:5> emulate -L zsh
++vcs_info_setsys:6> setopt extendedglob typeset_silent
++vcs_info_setsys:8> local sys
++vcs_info_setsys:9> typeset -ga VCS_INFO_backends
++vcs_info_setsys:10> local -a match mbegin mend
++vcs_info_setsys:12> VCS_INFO_backends=( ) 
++vcs_info_setsys:14> file=/usr/share/zsh/functions/VCS_Info/Backends/VCS_INFO_get_data_bzr
++vcs_info_setsys:15> file=VCS_INFO_get_data_bzr 
++vcs_info_setsys:16> :
++vcs_info_setsys:17> sys=bzr 
++vcs_info_setsys:19> [[ -n '' ]]
++vcs_info_setsys:20> VCS_INFO_backends+=( bzr ) 
++vcs_info_setsys:21> autoload -Uz VCS_INFO_detect_bzr
++vcs_info_setsys:22> autoload -Uz VCS_INFO_get_data_bzr
++vcs_info_setsys:14> file=/usr/share/zsh/functions/VCS_Info/Backends/VCS_INFO_get_data_cdv
++vcs_info_setsys:15> file=VCS_INFO_get_data_cdv 
++vcs_info_setsys:16> :
++vcs_info_setsys:17> sys=cdv 
++vcs_info_setsys:19> [[ -n '' ]]
++vcs_info_setsys:20> VCS_INFO_backends+=( cdv ) 
++vcs_info_setsys:21> autoload -Uz VCS_INFO_detect_cdv
++vcs_info_setsys:22> autoload -Uz VCS_INFO_get_data_cdv
++vcs_info_setsys:14> file=/usr/share/zsh/functions/VCS_Info/Backends/VCS_INFO_get_data_cvs
++vcs_info_setsys:15> file=VCS_INFO_get_data_cvs 
++vcs_info_setsys:16> :
++vcs_info_setsys:17> sys=cvs 
++vcs_info_setsys:19> [[ -n '' ]]
++vcs_info_setsys:20> VCS_INFO_backends+=( cvs ) 
++vcs_info_setsys:21> autoload -Uz VCS_INFO_detect_cvs
++vcs_info_setsys:22> autoload -Uz VCS_INFO_get_data_cvs
++vcs_info_setsys:14> file=/usr/share/zsh/functions/VCS_Info/Backends/VCS_INFO_get_data_darcs
++vcs_info_setsys:15> file=VCS_INFO_get_data_darcs 
++vcs_info_setsys:16> :
++vcs_info_setsys:17> sys=darcs 
++vcs_info_setsys:19> [[ -n '' ]]
++vcs_info_setsys:20> VCS_INFO_backends+=( darcs ) 
++vcs_info_setsys:21> autoload -Uz VCS_INFO_detect_darcs
++vcs_info_setsys:22> autoload -Uz VCS_INFO_get_data_darcs
++vcs_info_setsys:14> file=/usr/share/zsh/functions/VCS_Info/Backends/VCS_INFO_get_data_fossil
++vcs_info_setsys:15> file=VCS_INFO_get_data_fossil 
++vcs_info_setsys:16> :
++vcs_info_setsys:17> sys=fossil 
++vcs_info_setsys:19> [[ -n '' ]]
++vcs_info_setsys:20> VCS_INFO_backends+=( fossil ) 
++vcs_info_setsys:21> autoload -Uz VCS_INFO_detect_fossil
++vcs_info_setsys:22> autoload -Uz VCS_INFO_get_data_fossil
++vcs_info_setsys:14> file=/usr/share/zsh/functions/VCS_Info/Backends/VCS_INFO_get_data_git
++vcs_info_setsys:15> file=VCS_INFO_get_data_git 
++vcs_info_setsys:16> :
++vcs_info_setsys:17> sys=git 
++vcs_info_setsys:19> [[ -n '' ]]
++vcs_info_setsys:20> VCS_INFO_backends+=( git ) 
++vcs_info_setsys:21> autoload -Uz VCS_INFO_detect_git
++vcs_info_setsys:22> autoload -Uz VCS_INFO_get_data_git
++vcs_info_setsys:14> file=/usr/share/zsh/functions/VCS_Info/Backends/VCS_INFO_get_data_hg
++vcs_info_setsys:15> file=VCS_INFO_get_data_hg 
++vcs_info_setsys:16> :
++vcs_info_setsys:17> sys=hg 
++vcs_info_setsys:19> [[ -n '' ]]
++vcs_info_setsys:20> VCS_INFO_backends+=( hg ) 
++vcs_info_setsys:21> autoload -Uz VCS_INFO_detect_hg
++vcs_info_setsys:22> autoload -Uz VCS_INFO_get_data_hg
++vcs_info_setsys:14> file=/usr/share/zsh/functions/VCS_Info/Backends/VCS_INFO_get_data_mtn
++vcs_info_setsys:15> file=VCS_INFO_get_data_mtn 
++vcs_info_setsys:16> :
++vcs_info_setsys:17> sys=mtn 
++vcs_info_setsys:19> [[ -n '' ]]
++vcs_info_setsys:20> VCS_INFO_backends+=( mtn ) 
++vcs_info_setsys:21> autoload -Uz VCS_INFO_detect_mtn
++vcs_info_setsys:22> autoload -Uz VCS_INFO_get_data_mtn
++vcs_info_setsys:14> file=/usr/share/zsh/functions/VCS_Info/Backends/VCS_INFO_get_data_p4
++vcs_info_setsys:15> file=VCS_INFO_get_data_p4 
++vcs_info_setsys:16> :
++vcs_info_setsys:17> sys=p4 
++vcs_info_setsys:19> [[ -n '' ]]
++vcs_info_setsys:20> VCS_INFO_backends+=( p4 ) 
++vcs_info_setsys:21> autoload -Uz VCS_INFO_detect_p4
++vcs_info_setsys:22> autoload -Uz VCS_INFO_get_data_p4
++vcs_info_setsys:14> file=/usr/share/zsh/functions/VCS_Info/Backends/VCS_INFO_get_data_svk
++vcs_info_setsys:15> file=VCS_INFO_get_data_svk 
++vcs_info_setsys:16> :
++vcs_info_setsys:17> sys=svk 
++vcs_info_setsys:19> [[ -n '' ]]
++vcs_info_setsys:20> VCS_INFO_backends+=( svk ) 
++vcs_info_setsys:21> autoload -Uz VCS_INFO_detect_svk
++vcs_info_setsys:22> autoload -Uz VCS_INFO_get_data_svk
++vcs_info_setsys:14> file=/usr/share/zsh/functions/VCS_Info/Backends/VCS_INFO_get_data_svn
++vcs_info_setsys:15> file=VCS_INFO_get_data_svn 
++vcs_info_setsys:16> :
++vcs_info_setsys:17> sys=svn 
++vcs_info_setsys:19> [[ -n '' ]]
++vcs_info_setsys:20> VCS_INFO_backends+=( svn ) 
++vcs_info_setsys:21> autoload -Uz VCS_INFO_detect_svn
++vcs_info_setsys:22> autoload -Uz VCS_INFO_get_data_svn
++vcs_info_setsys:14> file=/usr/share/zsh/functions/VCS_Info/Backends/VCS_INFO_get_data_tla
++vcs_info_setsys:15> file=VCS_INFO_get_data_tla 
++vcs_info_setsys:16> :
++vcs_info_setsys:17> sys=tla 
++vcs_info_setsys:19> [[ -n '' ]]
++vcs_info_setsys:20> VCS_INFO_backends+=( tla ) 
++vcs_info_setsys:21> autoload -Uz VCS_INFO_detect_tla
++vcs_info_setsys:22> autoload -Uz VCS_INFO_get_data_tla
++vcs_info_setsys:25> return 0
++vcs_info:148> vcs_info
++vcs_info:1> emulate -L zsh
++vcs_info:2> setopt extendedglob NO_warn_create_global
++vcs_info:4> [[ -r . ]]
++vcs_info:6> local pat
++vcs_info:7> local -i found retval
++vcs_info:8> local -a enabled disabled dps
++vcs_info:9> local usercontext vcs rrn quiltmode
++vcs_info:10> local -x LC_MESSAGES
++vcs_info:11> local -i maxexports
++vcs_info:12> local -a msgs
++vcs_info:13> local -A vcs_comm hook_com backend_misc user_data
++vcs_info:15> LC_MESSAGES=C 
++vcs_info:16> [[ -n '' ]]
++vcs_info:21> vcs=-init- 
++vcs_info:21> rrn=-all- 
++vcs_info:21> quiltmode=addon 
++vcs_info:22> usercontext=default 
++vcs_info:24> VCS_INFO_hook start-up
++VCS_INFO_hook:5> local hook static func
++VCS_INFO_hook:6> local context hook_name
++VCS_INFO_hook:7> local -i ret
++VCS_INFO_hook:8> local -a hooks tmp
++VCS_INFO_hook:9> local -i debug
++VCS_INFO_hook:11> ret=0 
++VCS_INFO_hook:12> hook_name=start-up 
++VCS_INFO_hook:13> shift
++VCS_INFO_hook:14> context=:vcs_info:-init-+start-up:default:-all- 
++VCS_INFO_hook:15> static=:vcs_info-static_hooks:start-up 
++VCS_INFO_hook:17> zstyle -t :vcs_info:-init-+start-up:default:-all- debug
++VCS_INFO_hook:17> debug=0 
++VCS_INFO_hook:18> ((  debug  ))
++VCS_INFO_hook:24> zstyle -a :vcs_info-static_hooks:start-up hooks hooks
++VCS_INFO_hook:25> ((  debug  ))
++VCS_INFO_hook:28> zstyle -a :vcs_info:-init-+start-up:default:-all- hooks tmp
++VCS_INFO_hook:29> ((  debug  ))
++VCS_INFO_hook:32> hooks+=( ) 
++VCS_INFO_hook:33> ((  0 == 0  ))
++VCS_INFO_hook:33> return 0
++vcs_info:25> retval=0 
++vcs_info:26> ((  retval == 1  ))
++vcs_info:28> ((  retval == 2  ))
++vcs_info:36> zstyle -a :vcs_info:-init-:default:-all- enable enabled
++vcs_info:37> ((  1 == 0  ))
++vcs_info:39> [[ -n '' ]]
++vcs_info:44> [[ -n '' ]]
++vcs_info:49> zstyle -a :vcs_info:-init-:default:-all- disable-patterns dps
++vcs_info:59> VCS_INFO_maxexports
++VCS_INFO_maxexports:5> setopt localoptions NO_shwordsplit unset
++VCS_INFO_maxexports:7> zstyle -s :vcs_info:-init-:default:-all- max-exports maxexports
++VCS_INFO_maxexports:7> maxexports=2 
++VCS_INFO_maxexports:8> [[ 2 != <-> ]]
++VCS_INFO_maxexports:8> ((  maxexports < 1  ))
++VCS_INFO_maxexports:13> return 0
++vcs_info:61> ((  found = 0  ))
++vcs_info:62> vcs=git
++vcs_info:63> [[ -n '' ]]
++vcs_info:64> ((  1 == 0  ))
++vcs_info:69> vcs_comm=( ) 
++vcs_info:70> VCS_INFO_get_cmd
++VCS_INFO_get_cmd:4> local cmd
++VCS_INFO_get_cmd:5> zstyle -s :vcs_info:git:default:-all- command cmd
++VCS_INFO_get_cmd:6> vcs_comm[cmd]=git 
++vcs_info:71> VCS_INFO_detect_git
++VCS_INFO_detect_git:5> setopt localoptions NO_shwordsplit
++VCS_INFO_detect_git:7> [[ '' == --flavours ]]
++VCS_INFO_detect_git:9> VCS_INFO_check_com git
++VCS_INFO_check_com:5> setopt localoptions NO_shwordsplit
++VCS_INFO_check_com:7> case git (/*)
++VCS_INFO_check_com:7> case git (*)
++VCS_INFO_check_com:12> ((  1  ))
++VCS_INFO_check_com:12> return 0
++VCS_INFO_detect_git:9> git rev-parse --is-inside-work-tree
++VCS_INFO_detect_git:10> vcs_comm[gitdir]=+VCS_INFO_detect_git:10> git rev-parse --git-dir
++VCS_INFO_detect_git:10> vcs_comm[gitdir]=.git 
++VCS_INFO_detect_git:11> [[ -d .git/svn ]]
++VCS_INFO_detect_git:12> [[ -d .git/refs/remotes/p4 ]]
++VCS_INFO_detect_git:13> return 0
++vcs_info:71> ((  found = 1  ))
++vcs_info:71> break
++vcs_info:74> ((  found == 0  ))
++vcs_info:80> VCS_INFO_hook pre-get-data
++VCS_INFO_hook:5> local hook static func
++VCS_INFO_hook:6> local context hook_name
++VCS_INFO_hook:7> local -i ret
++VCS_INFO_hook:8> local -a hooks tmp
++VCS_INFO_hook:9> local -i debug
++VCS_INFO_hook:11> ret=0 
++VCS_INFO_hook:12> hook_name=pre-get-data 
++VCS_INFO_hook:13> shift
++VCS_INFO_hook:14> context=:vcs_info:git+pre-get-data:default:-all- 
++VCS_INFO_hook:15> static=:vcs_info-static_hooks:pre-get-data 
++VCS_INFO_hook:17> zstyle -t :vcs_info:git+pre-get-data:default:-all- debug
++VCS_INFO_hook:17> debug=0 
++VCS_INFO_hook:18> ((  debug  ))
++VCS_INFO_hook:24> zstyle -a :vcs_info-static_hooks:pre-get-data hooks hooks
++VCS_INFO_hook:25> ((  debug  ))
++VCS_INFO_hook:28> zstyle -a :vcs_info:git+pre-get-data:default:-all- hooks tmp
++VCS_INFO_hook:29> ((  debug  ))
++VCS_INFO_hook:32> hooks+=( ) 
++VCS_INFO_hook:33> ((  0 == 0  ))
++VCS_INFO_hook:33> return 0
++vcs_info:81> retval=0 
++vcs_info:82> ((  retval == 1  ))
++vcs_info:84> ((  retval == 2  ))
++vcs_info:89> VCS_INFO_get_data_git
++VCS_INFO_get_data_git:5> setopt localoptions extendedglob NO_shwordsplit
++VCS_INFO_get_data_git:6> local gitdir gitbase gitbranch gitaction gitunstaged gitstaged gitsha1 gitmisc
++VCS_INFO_get_data_git:7> local -i querystaged queryunstaged
++VCS_INFO_get_data_git:8> local -a git_patches_applied git_patches_unapplied
++VCS_INFO_get_data_git:9> local -A hook_com
++VCS_INFO_get_data_git:134> gitdir=.git 
++VCS_INFO_get_data_git:135> VCS_INFO_git_getbranch .git
++VCS_INFO_git_getbranch:1> local gitdir=.git tmp actiondir
++VCS_INFO_git_getbranch:2> local gitsymref='git symbolic-ref HEAD'
++VCS_INFO_git_getbranch:4> actiondir='' 
++VCS_INFO_git_getbranch:5> tmp=.git/rebase-apply
++VCS_INFO_git_getbranch:8> [[ -d .git/rebase-apply ]]
++VCS_INFO_git_getbranch:5> tmp=.git/rebase
++VCS_INFO_git_getbranch:8> [[ -d .git/rebase ]]
++VCS_INFO_git_getbranch:5> tmp=.git/../.dotest
++VCS_INFO_git_getbranch:8> [[ -d .git/../.dotest ]]
++VCS_INFO_git_getbranch:13> [[ -n '' ]]
++VCS_INFO_git_getbranch:20> [[ -f .git/MERGE_HEAD ]]
++VCS_INFO_git_getbranch:24> [[ -d .git/rebase-merge ]]
++VCS_INFO_git_getbranch:31> [[ -d .git/.dotest-merge ]]
++VCS_INFO_git_getbranch:35> gitbranch=+VCS_INFO_git_getbranch:35> git symbolic-ref HEAD
++VCS_INFO_git_getbranch:35> gitbranch=refs/heads/main 
++VCS_INFO_git_getbranch:37> [[ 0 -ne 0 ]]
++VCS_INFO_git_getbranch:46> return 0
++VCS_INFO_get_data_git:136> gitbase=+VCS_INFO_get_data_git:136> git rev-parse --show-toplevel
++VCS_INFO_get_data_git:136> gitbase=/home/mci/ifx_lab 
++VCS_INFO_get_data_git:137> rrn=ifx_lab 
++VCS_INFO_get_data_git:138> zstyle -t :vcs_info:git:default:ifx_lab get-revision
++VCS_INFO_get_data_git:139> gitsha1=+VCS_INFO_get_data_git:139> git rev-parse --quiet --verify HEAD
++VCS_INFO_get_data_git:139> gitsha1=a5451dd1f2ee505aa52a4adfdf05001221e55520 
++VCS_INFO_get_data_git:143> gitbranch=main 
++VCS_INFO_get_data_git:145> [[ -z .git ]]
++VCS_INFO_get_data_git:145> [[ -z main ]]
++VCS_INFO_get_data_git:149> zstyle -t :vcs_info:git:default:ifx_lab check-for-changes
++VCS_INFO_get_data_git:150> querystaged=1 
++VCS_INFO_get_data_git:151> queryunstaged=1 
++VCS_INFO_get_data_git:155> ((  querystaged || queryunstaged  ))
++VCS_INFO_get_data_git:156> [[+VCS_INFO_get_data_git:156> git rev-parse --is-inside-work-tree
++VCS_INFO_get_data_git:156> [[ true == true ]]
++VCS_INFO_get_data_git:158> ((  queryunstaged  ))
++VCS_INFO_get_data_git:159> git diff --no-ext-diff '--ignore-submodules=dirty' --quiet --exit-code
++VCS_INFO_get_data_git:160> gitunstaged=1 
++VCS_INFO_get_data_git:162> ((  querystaged  ))
++VCS_INFO_get_data_git:163> git rev-parse --quiet --verify HEAD
++VCS_INFO_get_data_git:164> git diff-index --cached --quiet '--ignore-submodules=dirty' HEAD
++VCS_INFO_get_data_git:165> ((  0 && 0 != 128  ))
++VCS_INFO_get_data_git:175> VCS_INFO_adjust
++VCS_INFO_adjust:5> setopt localoptions NO_shwordsplit
++VCS_INFO_adjust:7> [[ -n '' ]]
++VCS_INFO_adjust:8> return 0
++VCS_INFO_get_data_git:176> VCS_INFO_git_getaction .git
++VCS_INFO_git_getaction:1> local gitdir=.git
++VCS_INFO_git_getaction:2> local tmp
++VCS_INFO_git_getaction:4> tmp=.git/rebase-apply
++VCS_INFO_git_getaction:7> [[ -d .git/rebase-apply ]]
++VCS_INFO_git_getaction:4> tmp=.git/rebase
++VCS_INFO_git_getaction:7> [[ -d .git/rebase ]]
++VCS_INFO_git_getaction:4> tmp=.git/../.dotest
++VCS_INFO_git_getaction:7> [[ -d .git/../.dotest ]]
++VCS_INFO_git_getaction:19> tmp=.git/rebase-merge/interactive
++VCS_INFO_git_getaction:21> [[ -f .git/rebase-merge/interactive ]]
++VCS_INFO_git_getaction:19> tmp=.git/.dotest-merge/interactive
++VCS_INFO_git_getaction:21> [[ -f .git/.dotest-merge/interactive ]]
++VCS_INFO_git_getaction:27> tmp=.git/rebase-merge
++VCS_INFO_git_getaction:29> [[ -d .git/rebase-merge ]]
++VCS_INFO_git_getaction:27> tmp=.git/.dotest-merge
++VCS_INFO_git_getaction:29> [[ -d .git/.dotest-merge ]]
++VCS_INFO_git_getaction:35> [[ -f .git/MERGE_HEAD ]]
++VCS_INFO_git_getaction:40> [[ -f .git/BISECT_LOG ]]
++VCS_INFO_git_getaction:45> [[ -f .git/CHERRY_PICK_HEAD ]]
++VCS_INFO_git_getaction:54> [[ -d .git/sequencer ]]
++VCS_INFO_git_getaction:59> return 1
++VCS_INFO_get_data_git:178> local patchdir=.git/patches/main
++VCS_INFO_get_data_git:179> [[ -d .git/patches/main ]]
++VCS_INFO_get_data_git:186> [[ -d .git/rebase-merge ]]
++VCS_INFO_get_data_git:202> [[ -d .git/rebase-apply ]]
++VCS_INFO_get_data_git:244> [[ -f .git/MERGE_HEAD ]]
++VCS_INFO_get_data_git:262> [[ -f .git/CHERRY_PICK_HEAD ]]
++VCS_INFO_get_data_git:286> gitmisc='' 
++VCS_INFO_get_data_git:289> backend_misc[patches]='' 
++VCS_INFO_get_data_git:290> VCS_INFO_formats '' main /home/mci/ifx_lab '' 1 a5451dd1f2ee505aa52a4adfdf05001221e55520 ''
++VCS_INFO_formats:5> setopt localoptions noksharrays NO_shwordsplit
++VCS_INFO_formats:6> local msg tmp
++VCS_INFO_formats:7> local -i i
++VCS_INFO_formats:8> local -A hook_com
++VCS_INFO_formats:12> hook_com=( action '' action_orig '' branch main branch_orig main base /home/mci/ifx_lab base_orig /home/mci/ifx_lab staged '' staged_orig '' unstaged 1 unstaged_orig 1 revision a5451dd1f2ee505aa52a4adfdf05001221e55520 revision_orig a5451dd1f2ee505aa52a4adfdf05001221e55520 misc '' misc_orig '' vcs git vcs_orig git ) 
++VCS_INFO_formats:30> hook_com[base-name]=ifx_lab 
++VCS_INFO_formats:31> hook_com[base-name_orig]='' 
++VCS_INFO_formats:32> hook_com[subdir]=+VCS_INFO_formats:32> VCS_INFO_reposub /home/mci/ifx_lab
++VCS_INFO_reposub:5> setopt localoptions extendedglob NO_shwordsplit
++VCS_INFO_reposub:6> local base=/home/mci/ifx_lab tmp
++VCS_INFO_reposub:8> tmp=+VCS_INFO_reposub:8> pwd -P
++VCS_INFO_reposub:8> tmp=/home/mci/ifx_lab 
++VCS_INFO_reposub:9> [[ /home/mci/ifx_lab == /home/mci/ifx_lab/* ]]
++VCS_INFO_reposub:10> printf .
++VCS_INFO_reposub:11> return 1
++VCS_INFO_formats:32> hook_com[subdir]=. 
++VCS_INFO_formats:33> hook_com[subdir_orig]=. 
++VCS_INFO_formats:35> VCS_INFO_hook post-backend
++VCS_INFO_hook:5> local hook static func
++VCS_INFO_hook:6> local context hook_name
++VCS_INFO_hook:7> local -i ret
++VCS_INFO_hook:8> local -a hooks tmp
++VCS_INFO_hook:9> local -i debug
++VCS_INFO_hook:11> ret=0 
++VCS_INFO_hook:12> hook_name=post-backend 
++VCS_INFO_hook:13> shift
++VCS_INFO_hook:14> context=:vcs_info:git+post-backend:default:ifx_lab 
++VCS_INFO_hook:15> static=:vcs_info-static_hooks:post-backend 
++VCS_INFO_hook:17> zstyle -t :vcs_info:git+post-backend:default:ifx_lab debug
++VCS_INFO_hook:17> debug=0 
++VCS_INFO_hook:18> ((  debug  ))
++VCS_INFO_hook:24> zstyle -a :vcs_info-static_hooks:post-backend hooks hooks
++VCS_INFO_hook:25> ((  debug  ))
++VCS_INFO_hook:28> zstyle -a :vcs_info:git+post-backend:default:ifx_lab hooks tmp
++VCS_INFO_hook:29> ((  debug  ))
++VCS_INFO_hook:32> hooks+=( ) 
++VCS_INFO_hook:33> ((  0 == 0  ))
++VCS_INFO_hook:33> return 0
++VCS_INFO_formats:52> [[ -n '' ]]
++VCS_INFO_formats:56> zstyle -a :vcs_info:git:default:ifx_lab formats msgs
++VCS_INFO_formats:57> ((  1 < 1  ))
++VCS_INFO_formats:60> [[ -n '' ]]
++VCS_INFO_formats:65> [[ -n 1 ]]
++VCS_INFO_formats:66> zstyle -s :vcs_info:git:default:ifx_lab unstagedstr tmp
++VCS_INFO_formats:67> [[ -z $'\M-B\M-1' ]]
++VCS_INFO_formats:67> hook_com[unstaged]=$'\M-B\M-1' 
++VCS_INFO_formats:70> [[ addon != standalone ]]
++VCS_INFO_formats:70> VCS_INFO_hook pre-addon-quilt
++VCS_INFO_hook:5> local hook static func
++VCS_INFO_hook:6> local context hook_name
++VCS_INFO_hook:7> local -i ret
++VCS_INFO_hook:8> local -a hooks tmp
++VCS_INFO_hook:9> local -i debug
++VCS_INFO_hook:11> ret=0 
++VCS_INFO_hook:12> hook_name=pre-addon-quilt 
++VCS_INFO_hook:13> shift
++VCS_INFO_hook:14> context=:vcs_info:git+pre-addon-quilt:default:ifx_lab 
++VCS_INFO_hook:15> static=:vcs_info-static_hooks:pre-addon-quilt 
++VCS_INFO_hook:17> zstyle -t :vcs_info:git+pre-addon-quilt:default:ifx_lab debug
++VCS_INFO_hook:17> debug=0 
++VCS_INFO_hook:18> ((  debug  ))
++VCS_INFO_hook:24> zstyle -a :vcs_info-static_hooks:pre-addon-quilt hooks hooks
++VCS_INFO_hook:25> ((  debug  ))
++VCS_INFO_hook:28> zstyle -a :vcs_info:git+pre-addon-quilt:default:ifx_lab hooks tmp
++VCS_INFO_hook:29> ((  debug  ))
++VCS_INFO_hook:32> hooks+=( ) 
++VCS_INFO_hook:33> ((  0 == 0  ))
++VCS_INFO_hook:33> return 0
++VCS_INFO_formats:71> local REPLY
++VCS_INFO_formats:72> VCS_INFO_quilt addon
++VCS_INFO_quilt:195> VCS_INFO_quilt addon
++VCS_INFO_quilt:1> emulate -L zsh
++VCS_INFO_quilt:2> setopt extendedglob
++VCS_INFO_quilt:3> local mode=addon
++VCS_INFO_quilt:4> local patches pc tmp qstring root
++VCS_INFO_quilt:5> local -i ret
++VCS_INFO_quilt:6> local context
++VCS_INFO_quilt:7> local -a applied unapplied applied_string unapplied_string quiltcommand quilt_env
++VCS_INFO_quilt:8> local -A hook_com
++VCS_INFO_quilt:10> context=:vcs_info:git.quilt-addon:default:ifx_lab 
++VCS_INFO_quilt:11> zstyle -t :vcs_info:git.quilt-addon:default:ifx_lab use-quilt
++VCS_INFO_quilt:11> return 1
++VCS_INFO_formats:73> hook_com[quilt]='' 
++VCS_INFO_formats:74> unset REPLY
++VCS_INFO_formats:79> ((  1 > maxexports  ))
++VCS_INFO_formats:80> i=1
++VCS_INFO_formats:81> VCS_INFO_hook set-message 0 ' %u%c'
++VCS_INFO_hook:5> local hook static func
++VCS_INFO_hook:6> local context hook_name
++VCS_INFO_hook:7> local -i ret
++VCS_INFO_hook:8> local -a hooks tmp
++VCS_INFO_hook:9> local -i debug
++VCS_INFO_hook:11> ret=0 
++VCS_INFO_hook:12> hook_name=set-message 
++VCS_INFO_hook:13> shift
++VCS_INFO_hook:14> context=:vcs_info:git+set-message:default:ifx_lab 
++VCS_INFO_hook:15> static=:vcs_info-static_hooks:set-message 
++VCS_INFO_hook:17> zstyle -t :vcs_info:git+set-message:default:ifx_lab debug
++VCS_INFO_hook:17> debug=0 
++VCS_INFO_hook:18> ((  debug  ))
++VCS_INFO_hook:24> zstyle -a :vcs_info-static_hooks:set-message hooks hooks
++VCS_INFO_hook:25> ((  debug  ))
++VCS_INFO_hook:28> zstyle -a :vcs_info:git+set-message:default:ifx_lab hooks tmp
++VCS_INFO_hook:29> ((  debug  ))
++VCS_INFO_hook:32> hooks+=( ) 
++VCS_INFO_hook:33> ((  0 == 0  ))
++VCS_INFO_hook:33> return 0
++VCS_INFO_formats:82> zformat -f msg ' %u%c' a: b:main c: i:a5451dd1f2ee505aa52a4adfdf05001221e55520 m: r:ifx_lab s:git $'u:\M-B\M-1' Q: R:/home/mci/ifx_lab S:.
++VCS_INFO_formats:94> msgs[$i]=$' \M-B\M-1' 
++VCS_INFO_formats:99> hook_com=( ) 
++VCS_INFO_formats:100> backend_misc=( ) 
++VCS_INFO_formats:101> return 0
++VCS_INFO_get_data_git:291> return 0
++vcs_info:94> VCS_INFO_set
++VCS_INFO_set:5> setopt localoptions noksharrays NO_shwordsplit unset
++VCS_INFO_set:6> local -i i j
++VCS_INFO_set:8> [[ '' == --nvcs ]]
++VCS_INFO_set:17> ((  1 - 1 < 0  ))
++VCS_INFO_set:18> i=0
++VCS_INFO_set:19> ((  j = i + 1  ))
++VCS_INFO_set:20> typeset -g $'vcs_info_msg_0_= \M-B\M-1'
++VCS_INFO_set:23> ((  i < maxexports  ))
++VCS_INFO_set:24> j=1
++VCS_INFO_set:25> [[ -n '' ]]
++VCS_INFO_set:24> j=2
++VCS_INFO_set:25> [[ -n '' ]]
++VCS_INFO_set:28> return 0
++vcs_info:95> return 0
++prompt_git:41> echo -n $'\M-n\M-\C-B\M-  main \M-B\M-1'
++build_prompt:8> prompt_bzr
++prompt_bzr:1> ((  0  ))
++prompt_bzr:1> return
++build_prompt:9> prompt_hg
++prompt_hg:1> ((  0  ))
++prompt_hg:1> return
++build_prompt:10> prompt_end
++prompt_end:1> [[ -n yellow ]]
++prompt_end:2> echo -n $' %{%k%F{yellow}%}\M-n\M-\C-B\M-0\\n$'
++prompt_end:6> echo -n '%{%f%}'
++prompt_end:7> CURRENT_BG='' 
++omz_termsupport_preexec:1> [[ '' == true ]]
++omz_termsupport_preexec:3> emulate -L zsh
++omz_termsupport_preexec:4> setopt extended_glob
++omz_termsupport_preexec:7> local -a cmdargs
++omz_termsupport_preexec:8> cmdargs=( set +x ) 
++omz_termsupport_preexec:10> [[ set = fg ]]
++omz_termsupport_preexec:44> local CMD=set
++omz_termsupport_preexec:45> local LINE='set +x'
++omz_termsupport_preexec:47> title '$CMD' '%100>...>$LINE%<<'
++title:1> emulate -L zsh
++title:2> setopt prompt_subst
++title:4> [[ '' == *term* ]]
++title:8> : '%100>...>$LINE%<<'
++title:10> case xterm (cygwin | xterm*)
++title:12> print -Pn '\e]2;%100\>...\>\$LINE%\<\<\a'
++title:13> print -Pn '\e]1;\$CMD\a'
++zsh:13> set +x
