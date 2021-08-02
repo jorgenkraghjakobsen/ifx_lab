@@ -43,6 +43,15 @@
           border: 1px solid #ccc;
           border-top: none;
         }
+
+        #individualTable, td, th {
+           border: 1px solid black;
+        }
+
+        #individualTable {
+            /*width: 100%;*/
+            border-collapse: collapse;
+        }
     </style>
     <script>
         //Defining a few global variables
@@ -113,24 +122,43 @@
 //                infoDiv.appendChild(infoDivP)
                 
                 i2c_data_parsed = []
-                thisElement["i2c_data"] = JSON.parse(thisElement["i2c_data"])
-                for(i in thisElement["i2c_data"]) {
-                    i2c_data_parsed.push([])
-                    i2c_data_parsed[i].push(thisElement["i2c_data"][i].split(" "))
+                if(thisElement["i2c_data"]) {
+                    thisElement["i2c_data"] = JSON.parse(thisElement["i2c_data"])
+                    for(i in thisElement["i2c_data"]) {
+                        i2c_data_parsed.push([])
+                        cThisElm = thisElement["i2c_data"][i].split(" ")
+                        for(j in cThisElm) {
+                            i2c_data_parsed[i].push(cThisElm[j])
+                        }
+                    }
                 }
-                console.log(i2c_data_parsed)
-
+                
                 var table = document.createElement('table');
-                for (var i = 0; i < i2c_data_parsed.length; i++) {
+                table.setAttribute('id', 'individualTable')
+                /*for (var i = 0; i < i2c_data_parsed.length; i++) {
                     var row = document.createElement('tr');
-                    for (var j = 0; j < i2c_data_parsed[i].length; j++) {
+                    for (var j = 0; j < i2c_data_parsed[i][0].length; j++) {
                         var cell = document.createElement('td');
-                        cell.textContent = i2c_data_parsed[i][j];
+                        cell.textContent = i2c_data_parsed[i][0][j];
                         row.appendChild(cell);
                     }
                     table.appendChild(row);
                 }
+                infoDiv.appendChild(table);*/
+                for (var i = 0; i < i2c_data_parsed.length; i++) {
+                    var row = document.createElement('tr');
+                    for (var j = 0; j < i2c_data_parsed[i].length; j++) {
+                        if(i2c_data_parsed[i][j] != "") {
+                            var cell = document.createElement('td');
+                            cell.textContent = i2c_data_parsed[i][j];
+                            row.appendChild(cell);
+                        }
+                    }
+                    table.appendChild(row);
+                }
                 infoDiv.appendChild(table);
+
+
 
                 infoDiv.id = tabName
                 infoSwitch.appendChild(infoDiv)
@@ -284,7 +312,6 @@
             }
 
 
-
             // This fils in data into the table
 
             row = table.insertRow();
@@ -310,8 +337,9 @@
         function getSingleElement(network, tabName) {
             var curElm
             //Find specific element using the network and tabName
+            console.log(tabName)
             for(let element of network) {
-                if(element.hostname) {
+                if(element.hostname != undefined) {
                     if(element.hostname == tabName) {
                         curElm = element
                 
