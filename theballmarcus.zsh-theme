@@ -23,5 +23,5 @@ ZSH_THEME_GIT_PROMPT_SUFFIX=")"
 ZSH_THEME_GIT_PROMPT_DIRTY="*"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 
-PROMPT='$(return_status)$(promt_user)$(promt_dir)%b'
+PROMPT='$(promt_user)$(promt_dir)$(return_status)%b'
 RPROMPT=$'%{\e[1;32m%}$(git_prompt_info)%{\e[0;0m%}  [%*]'
