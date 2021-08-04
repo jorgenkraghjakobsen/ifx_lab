@@ -18,6 +18,7 @@ class device {
     //DEFINE HANDLER EVENTS
     this.client.on('connect', function() {
       this.write(this.this_message)
+      console.log(this.this_message)
     });
 
     this.client.on('data', (data) => {

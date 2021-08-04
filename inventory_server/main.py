@@ -29,7 +29,7 @@ class Client(threading.Thread):
     def run(self):
         while self.signal:
             try:
-                data = self.socket.recv(32)
+                data = self.socket.recv(100)
             except:
                 print("Client " + str(self.address) + " has disconnected")
                 self.signal = False
@@ -44,8 +44,15 @@ class Client(threading.Thread):
                 #Attempt to read respone.
                 if decodedData == "getInstruments":  #Will respond with a list of connected instruments
                     response = instruments.listResources()
+                    print(response)
+
                 elif decodedData == "getName":
                     response = socket.gethostname()
+                elif decodedData.split("+")[0] == "query":
+                    if len(decodedData.split("+")) != 3:
+                        response = "Usage error"
+                    else:
+                        response = instruments.queryResource(decodedData.split("+")[1], decodedData.split("+")[2])
                 elif decodedData == "getI2c":
                     cur = i2c_lib.getI2c()
                     response = cur.decode('ascii').split('\n')#.decode('ascii')
