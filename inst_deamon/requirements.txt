@@ -1,0 +1,6 @@
+python-daemon==2.3.0
+pyusb==1.0.0
+PyVISA==1.11.3
+PyVISA-py==0.5.1
+websocket-server==0.4
+websockets==9.0.2
