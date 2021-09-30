@@ -39,11 +39,16 @@ Partly written by Marcus:
 
 Example on how to use the code:
     import visa #(THIS HAS TO BE THE MODIFIED VERSION!)
-    rm = visa.ResourceManager()
     sm = visa.SocketManager()
     socket = sm.open_socket()
     inst1 = socket.open_resource("[resource string]") #Resource string could fx be "TCPIP::192.168.1.189::INSTR"
     inst1.query('*IDN?')
+
+Another example:
+    import visa #(THIS HAS TO BE THE MODIFIED VERSION!)
+    rm = visa.ResourceManager()  
+    i1 = rm.open_resource("TCPIP::192.168.1.189::INSTR",checkSocket=True)
+    i1.query('*IDN?')
 
 PyVisa connection commands (prefix: .#.)::
     ping || If server works it will respond with pong
