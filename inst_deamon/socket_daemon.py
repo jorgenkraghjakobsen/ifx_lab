@@ -6,13 +6,16 @@ import code.commands as cmdHandler
 import struct
 import json
 
+import sys 
+sys.path.append('..')
+
 RUN_AS_DAEMON=False
 
 #DEFINE A FEW VARIABLES
 host = "localhost"
 port = 1340
 
-
+debug_print=True
 
 
 sock_counter = 0
@@ -21,7 +24,7 @@ sock_counter_total = 0
 def handle_client(Client, socket_id):
     global sock_counter
     global sock_counter_total
-    print(f"Client socket {socket_id} joined joined.")
+    if debug_print: print(f"Client socket {socket_id} joined joined.")
 
     sock_counter = sock_counter + 1
     sock_counter_total = sock_counter_total + 1
@@ -37,9 +40,9 @@ def handle_client(Client, socket_id):
         except Exception as e:
             alive = False
             sock_counter = sock_counter - 1
-            print(f"Client {socket_id} left.")
+            if debug_print: print(f"Client {socket_id} left.")
 
-        print(msgStr)
+        if debug_print: print(msgStr)
         if len(msgStr) >= 4:
             cmdIndicator = msgStr[:3]
             curCmd = msgStr[-len(msgStr)+3:]
