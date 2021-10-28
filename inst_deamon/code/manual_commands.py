@@ -11,11 +11,6 @@ def list_resources(args):
 def open_resource(args):
     global instIDCounter
     inst = rm.open_resource(args[0])
-    print("''''''''''''''''''''''''''''''")
-    print(rm.list_opened_resources())
-    print(openInstruments)
-    print("''''''''''''''''''''''''''''''")
-
     if args[0] in openInstruments:
         for i in openInstruments.keys():
             if args[0] == i:

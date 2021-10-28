@@ -90,7 +90,7 @@ The class below is to communicate with a socket server with the corresponding fu
 
 
 """
-tryIps = ["127.0.0.1", "192.168.1.131"] #ADD IPS TO CHECK FOR SOCKET HERE!! ----------------------------------------------------------------------------------------------
+tryIps = ["192.168.1.131", "192.168.1.214", "192.168.1.32"] #ADD IPS TO CHECK FOR SOCKET HERE!! ----------------------------------------------------------------------------------------------
 tryPort = 1340
 
 class TCPVisaSocket:
@@ -107,9 +107,11 @@ class TCPVisaSocket:
         self.isSocket = True
 
         if specific_resource != None:
-            self.specific_resource = specific_resource
+            self.opened_resource = specific_resource
             self.open_resource(specific_resource)
-
+        else:
+            self.opened_resource = None
+    
     def list_resources(self):
         self.s.send(bytes(f"{self.prefix}list_resources",encoding="utf-8"))
         return repr(self.s.recv(4096))
@@ -120,31 +122,33 @@ class TCPVisaSocket:
 
     def open_resource(self, inst):
         self.s.send(bytes(f"{self.prefix}open_resource {inst}",encoding="utf-8"))
-        self.specific_resource = inst
+        self.opened_resource = inst
         recieved = repr(self.s.recv(4096))
         return self
 
     def write(self, cmd, inst=None):
-        if self.specific_resource != None and inst == None:
-            self.s.send(bytes(f"{self.prefix}write_resource {self.specific_resource} {cmd}",encoding="utf-8"))
+        if self.opened_resource != None and inst == None:
+            self.s.send(bytes(f"{self.prefix}write_resource {self.opened_resource} {cmd}",encoding="utf-8"))
         else:
             self.s.send(bytes(f"{self.prefix}write_resource {inst} {cmd}",encoding="utf-8"))
         return repr(self.s.recv(4096))
 
     def query(self, cmd, inst=None):
-        if self.specific_resource != None and inst == None:
-            self.s.send(bytes(f"{self.prefix}query_resource {self.specific_resource} {cmd}",encoding="utf-8"))
+        if self.opened_resource != None and inst == None:
+            self.s.send(bytes(f"{self.prefix}query_resource {self.opened_resource} {cmd}",encoding="utf-8"))
         else:
             self.s.send(bytes(f"{self.prefix}query_resource {inst} {cmd}",encoding="utf-8"))
 
         return repr(self.s.recv(4096))
+    
     def read(self, inst=None):
-        if self.specific_resource != None and inst == None:
-            self.s.send(bytes(f"{self.prefix}read_resource {self.specific_resource}",encoding="utf-8"))
+        if self.opened_resource != None and inst == None:
+            self.s.send(bytes(f"{self.prefix}read_resource {self.opened_resource}",encoding="utf-8"))
         else:
             self.s.send(bytes(f"{self.prefix}read_resource {inst}",encoding="utf-8"))
 
         return repr(self.s.recv(4096))
+
     def close(self, inst):
         self.s.close()
 
@@ -3297,14 +3301,41 @@ class ResourceManager(object):
 
         """
         return self.visalib.open(self.session, resource_name, access_mode, open_timeout)
-    
+    def open_socket(
+        self,
+        ip: str = "",
+    ):
+        """
+         Parameters
+        ----------
+        null
+
+        Returns
+        -------
+        Socket
+            Subclass / subclasses of socket.
+
+        """
+        if ip != "":
+            return TCPVisaSocket(ip, 1340)
+        else:
+            open_sockets = []
+            for l in tryIps:
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                try:
+                    s.connect((l, tryPort))
+                    open_sockets.append(TCPVisaSocket(l, 1340, s=s))
+                except Exception as err:
+                    continue
+            return open_sockets
+
     def open_resource(
         self,
         resource_name: str,
         access_mode: constants.AccessModes = constants.AccessModes.no_lock,
         open_timeout: int = constants.VI_TMO_IMMEDIATE,
         resource_pyclass: Optional[Type["Resource"]] = None,
-        checkSocket=False,
+        checkSocket: bool = False,
         **kwargs: Any,
     ) -> "Resource":
         """Return an instrument for the resource name.
@@ -3361,15 +3392,21 @@ class ResourceManager(object):
        # print(checkSocket)
        # print(info.interface_type.value)
         if checkSocket == True:
+            open_sockets = []
             for l in tryIps:
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 try:
                     s.connect((l, tryPort))
-                    return TCPVisaSocket(l, 1340, s=s, specific_resource=resource_name)
+                    open_sockets.append(TCPVisaSocket(l, 1340, s=s))
                 except Exception as err:
-                    print(err)
                     continue
-
+                
+            returned = []
+            for l in open_sockets:
+                if resource_name in l.list_resources():
+                    returned.append(l.open_resource(resource_name))
+            return returned
+    
         res = resource_pyclass(self, resource_name)
         for key in kwargs.keys():
             try:
@@ -3443,13 +3480,3 @@ class ResourceManager(object):
             resource_name, access_mode, open_timeout, resource_pyclass, **kwargs
         )
 
-class SocketManager:
-    def open_socket(self,access_mode: constants.AccessModes = constants.AccessModes.no_lock):
-        for l in tryIps:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            try:
-                s.connect((l, tryPort))
-                return TCPVisaSocket(l, 1340, s=s)
-            except Exception as err:
-                continue
-        return "Didnt find any, sorry"

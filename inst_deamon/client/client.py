@@ -1,6 +1,6 @@
 import socket,json
 
-
+# I do not recommend using this example. It manually opens a socket and sends commands to the socket server. This is what it would look like without automation.
 HOST = 'localhost'
 PORT = 1340
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

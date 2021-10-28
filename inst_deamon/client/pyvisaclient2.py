@@ -1,10 +1,11 @@
 import sys 
 sys.path.insert(0, '..')
+"""
+This example asks every open socket if they have a matching insturment. open_resource will then return an array with the similiar instruments.
+"""
+import tcpvisa  #(THIS HAS TO BE THE MODIFIED VERSION!)
+rm = visa.ResourceManager('@py')
 
-import visa  #(THIS HAS TO BE THE MODIFIED VERSION!)
-rm = visa.ResourceManager()
-sm = visa.SocketManager()
-socket = sm.open_socket()
+i1 = rm.open_resource("ASRL/dev/ttyUSB0::INSTR", checkSocket=True)[0]
 
-i1 = socket.open_resource("TCPIP::192.168.1.189::INSTR") #Resource string could fx be "TCPIP::192.168.1.189::INSTR"
-i1.query('*IDN?')
+print(i1.query('*IDN?'))

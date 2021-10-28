@@ -37,10 +37,5 @@ def write_resource(args):
 def read_resource(args):
     return bytes(openInstruments[args[0]].read(),encoding="utf-8")
 
-#Will return a success or failed message
-def close_resource(args):
-    pass
-    return bytes("Will be added later",encoding="utf-8")
-
 def ping(args):
     return bytes("pong",encoding="utf-8")

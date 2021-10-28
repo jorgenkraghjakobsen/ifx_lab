@@ -12,7 +12,7 @@ sys.path.append('..')
 RUN_AS_DAEMON=False
 
 #DEFINE A FEW VARIABLES
-host = "localhost"
+host = "0.0.0.0"
 port = 1340
 
 debug_print=True
